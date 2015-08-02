@@ -3,7 +3,7 @@ using System;
 
 namespace checkers_wf
 {
-    partial class Form1
+    partial class View
     {
 
         private System.Windows.Forms.Panel[][] guiTileRefs;
@@ -14,7 +14,7 @@ namespace checkers_wf
         private void drawTest()
         {
             // 'this' refers to the Form instance
-            // eg the same instance of this used in Form1.Designer.cs
+            // eg the same instance of this used in View.Designer.cs
             // these tiles will be laid over top of the tilePanel panel
             // eg they will start at the same location coord
 
@@ -32,7 +32,7 @@ namespace checkers_wf
             this.testLabel.Text = "testComponent\r\n\r\n(Added in the manual Form1-guiTiles.cs) (partial with Form1)";
             this.testLabel.Size = new System.Drawing.Size(80, 100);
             this.testPanel.Controls.Add(this.testLabel);
-            // add this control to the parent control (Form1 in this case)
+            // add this control to the parent control (View in this case)
             this.Controls.Add(this.testPanel);
             // perform Layout
             this.testPanel.ResumeLayout(false);

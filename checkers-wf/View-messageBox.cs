@@ -1,7 +1,7 @@
 ﻿
 namespace checkers_wf
 {
-    partial class Form1
+    partial class View
     {
         /* This function is called at various stages of the programs execution to
          * update the main message box display under the game display. It can provide

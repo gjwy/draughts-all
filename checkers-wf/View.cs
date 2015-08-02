@@ -12,14 +12,14 @@ using checkers;
 
 namespace checkers_wf
 {
-    public partial class Form1 : Form
+    public partial class View : Form
     {
 
         private Board board;
 
-        public Form1()
+        public View(Board board)
         {
-            board = new Board(); //model
+            this.board = board; //model
 
             InitializeComponent(); //view
             // drawTiles(); // will be moved out of the initialiser <<==
@@ -44,7 +44,7 @@ namespace checkers_wf
         private void vsCompToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //drawTest();
-            drawTiles(board); // to implement in Form1-guiTiles.cs
+            drawTiles(board); // to implement in View-guiTiles.cs
             // requires the board object to get the colors decided for the tiles in the model
             // this is done in the control::
             board.populateGameBoard();
