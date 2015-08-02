@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checkers", "checkers\checkers.csproj", "{81EF8ABC-63DD-441F-874A-47F80547A73B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checkers-wf", "checkers-wf\checkers-wf.csproj", "{0FE24411-AF66-450F-B56D-504FFD7B4CBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81EF8ABC-63DD-441F-874A-47F80547A73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81EF8ABC-63DD-441F-874A-47F80547A73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81EF8ABC-63DD-441F-874A-47F80547A73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81EF8ABC-63DD-441F-874A-47F80547A73B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FE24411-AF66-450F-B56D-504FFD7B4CBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FE24411-AF66-450F-B56D-504FFD7B4CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FE24411-AF66-450F-B56D-504FFD7B4CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FE24411-AF66-450F-B56D-504FFD7B4CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
