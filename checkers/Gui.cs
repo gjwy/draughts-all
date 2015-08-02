@@ -8,5 +8,6 @@ namespace checkers
 {
     public class Gui
     {
+
     }
 }
