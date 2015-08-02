@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace checkers
 {
-    public class Board
+    public class Model
     {
 
         private Tile[][] internalBoard; // make 2-dimensional
         private int size;
 
-        public Board(int size = 8)
+        public Model(int size = 8)
         {
             this.size = size;
             internalBoard = new Tile[size][]; //creates size-rows
@@ -206,7 +206,7 @@ namespace checkers
          * piece and 2) those pieces have valid available moves
          * eg. getValidAvailableMoves() called for each player piece to
          * determine if the tile/piece has validAvailableMoves. --Expensive */
-        private List<Tile> getTilesContainingPlayerPiecesWithValidMoves(string player)
+        public List<Tile> getTilesContainingPlayerPiecesWithValidMoves(string player)
         {
             List<Tile> tilesContainingPlayerPiecesWithValidMoves = new List<Tile>();
 

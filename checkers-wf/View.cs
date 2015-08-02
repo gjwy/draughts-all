@@ -15,9 +15,9 @@ namespace checkers_wf
     public partial class View : Form
     {
 
-        private Board board;
+        private Model board;
 
-        public View(Board board)
+        public View(Model board)
         {
             this.board = board; //model
 
@@ -43,8 +43,13 @@ namespace checkers_wf
 
         private void vsCompToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            
+            // ASSERT BOARDSTATE==PREGAME
+
+
             //drawTest();
-            drawTiles(board); // to implement in View-guiTiles.cs
+            renderTiles(board); // to implement in View-guiTiles.cs
             // requires the board object to get the colors decided for the tiles in the model
             // this is done in the control::
             board.populateGameBoard();
@@ -53,7 +58,7 @@ namespace checkers_wf
 
             // wait for a small delay then update the gui accordingly
             //System.Threading.Thread.Sleep(1000);
-            updatePiecesGui(board);
+            renderPieces(board);
             // offload to logic
 
             // enable the clicking of the resetMenu_Click item
@@ -69,7 +74,7 @@ namespace checkers_wf
             
             // unpopulate the game board:
             board.clearGameBoard();
-            updatePiecesGui(board); // removes all the guipieces
+            renderPieces(board); // removes all the guipieces
             undrawTiles(board); // undraw the tiles
             resetToolStripMenuItem.Enabled = false;
             changeDisplayMessage("(gui) board has been reset");
@@ -82,12 +87,47 @@ namespace checkers_wf
             // also contains player state
         }
 
+
+
+
+        /* player vs player button clicked, setup */
         private void vsPlayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // drawTiles()
             // establish connection (host)
             // etc
+            // LOCAL VS PLAYER GAME
+            renderTiles(board);              // gui method
+
+            board.populateGameBoard();       // model method
+
+            renderPieces(board);             // gui method
+            resetToolStripMenuItem.Enabled = true;
+            changeDisplayMessage("ready for local player vs player game");
+
+            // start game
+            playerVsplayer();
+
         }
+
+        /* player vs player game flow
+         * could be moved somewhere else, but it requires
+         * access to the gui elements as well as model methods */
+        private void playerVsplayer()
+        {
+            string current = "red";
+            List<Tile> listOftiles = board.getTilesContainingPlayerPiecesWithValidMoves(current);
+            bool isMoves = listOftiles.Count != 0;
+            while (isMoves) //TODO change to a 'break' more efficient version
+            {
+                changeDisplayMessage("waiting on {red} to select a move(a)"); // current
+                // 1. get a move from the player ... (enable tiles to now be clicked) (wait till one is clicked)
+                
+                isMoves = false;
+            }
+        }
+
+
 
         private void optionsMenu_Click(object sender, EventArgs e)
         {
@@ -99,5 +139,23 @@ namespace checkers_wf
         {
 
         }
+
+        private void tileClicked(object sender, EventArgs e)
+        {
+            System.Console.WriteLine("tile has been clicked");
+            System.Windows.Forms.Panel tile = sender as System.Windows.Forms.Panel;
+            System.Console.WriteLine(tile.BackColor);
+        }
+
+        private void pieceClicked(object sender, Coord coord)
+        {
+            System.Console.WriteLine("piece has been clicked");
+            System.Windows.Forms.Panel piece = sender as System.Windows.Forms.Panel;
+            System.Console.WriteLine(piece.BackColor);
+            System.Console.WriteLine("coord is {0}", coord.repr());
+        }
+
+       
+
     }
 }

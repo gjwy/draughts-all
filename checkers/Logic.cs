@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace checkers
 {
-    public class Logic
+    public class Controller
     {
 
-        private Board board;
+        private Model board;
         private Gui gui;
 
-        public Logic(Board board, Gui gui)
+        public Controller(Model board, Gui gui)
         {
             this.board = board;
             this.gui = gui;
@@ -21,7 +21,7 @@ namespace checkers
         public void test()
         {
             Console.WriteLine("test1");
-            Board b = new Board();
+            Model b = new Model();
             b.populateGameBoard();
             Coord c = new Coord(2, 2); //this piece
             List<Move> vm = b.getValidAvailableMoves(c);

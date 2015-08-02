@@ -17,12 +17,14 @@ namespace checkers_wf
         static void Main()
         {
             // creates the model
-            Board board = new Board();
+            Model model = new Model();
+
+            // creates the controller
 
             // starts the View module running
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new View(board));
+            Application.Run(new View(model));
         }
     }
 }
