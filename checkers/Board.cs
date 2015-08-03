@@ -183,7 +183,18 @@ namespace checkers
                 // the list of valid available moves
                 if (moveIsValid)
                 {
-                    validAvailableMoves.Add(move);
+                    if (onlyJumps == true)
+                    {
+                        if (move.MoveType == "jmp")
+                        {
+                            validAvailableMoves.Add(move);
+                        }
+                    }
+                    else
+                    {
+                        validAvailableMoves.Add(move);
+                    }
+                    
                 }
             }
             
@@ -244,7 +255,7 @@ namespace checkers
          * 
          * Input is the result returned from the getValidAvailableMoves
          * function. That is, a list of moves for a certain piece. */
-        private void setHighlightTag(List<Move> validAvailableMoves, bool highlightValue)
+        public void setHighlightTag(List<Move> validAvailableMoves, bool highlightValue)
         {
             foreach (Move mv in validAvailableMoves)
             {

@@ -9,11 +9,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using checkers;
-
+/* THIS IS REALLY THE CONTROL FLOW, HANDLERS FOR GUI USER INPUT AND CREATES
+NEW GAEMS ETC */
 namespace checkers_wf
 {
     public partial class View : Form
     {
+        //options stuff to be put in options etc
+        private string startPlayer = "red";
+
+        // flow state stuff
+        private string GAMETYPE = "";
+        private int GAMESTATE; //enumerate eg 0->wating for first user click etc or a set of bools
+        private string PLAYER = ""; // the current player
+
 
         private Model board;
 
@@ -39,6 +48,18 @@ namespace checkers_wf
             // eg save open gme option
             // finally quit
             this.Close();
+        }
+
+
+        private void optionsMenu_Click(object sender, EventArgs e)
+        {
+            OptionForm optionForm = new OptionForm();
+            optionForm.ShowDialog();
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void vsCompToolStripMenuItem_Click(object sender, EventArgs e)
@@ -97,48 +118,44 @@ namespace checkers_wf
             // establish connection (host)
             // etc
             // LOCAL VS PLAYER GAME
-            renderTiles(board);              // gui method
-
-            board.populateGameBoard();       // model method
-
-            renderPieces(board);             // gui method
-            resetToolStripMenuItem.Enabled = true;
-            changeDisplayMessage("ready for local player vs player game");
-
-            // start game
             playerVsplayer();
-
         }
 
-        /* player vs player game flow
+
+
+
+
+
+
+
+
+
+
+
+        // ##################################################################
+        /* player vs player game flow set appropriate state
          * could be moved somewhere else, but it requires
          * access to the gui elements as well as model methods */
         private void playerVsplayer()
         {
-            string current = "red";
-            List<Tile> listOftiles = board.getTilesContainingPlayerPiecesWithValidMoves(current);
-            bool isMoves = listOftiles.Count != 0;
-            while (isMoves) //TODO change to a 'break' more efficient version
-            {
-                changeDisplayMessage("waiting on {red} to select a move(a)"); // current
-                // 1. get a move from the player ... (enable tiles to now be clicked) (wait till one is clicked)
-                
-                isMoves = false;
-            }
+            board.populateGameBoard();       // model method
+            renderTiles(board);              // gui method
+            renderPieces(board);             // gui method
+            
+            this.tilePanel.Enabled = true; // allows the tiles to be clicked
+            resetToolStripMenuItem.Enabled = true;
+            changeDisplayMessage("ready for local player vs player game");
+
+            this.GAMETYPE = "vsPlayer";
+            this.GAMESTATE = 0;
+            this.PLAYER = startPlayer;
+
+            // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
 
 
 
-        private void optionsMenu_Click(object sender, EventArgs e)
-        {
-            OptionForm optionForm = new OptionForm();
-            optionForm.ShowDialog();
-        }
 
-        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void tileClicked(object sender, EventArgs e)
         {
@@ -151,8 +168,44 @@ namespace checkers_wf
         {
             System.Console.WriteLine("piece has been clicked");
             System.Windows.Forms.Panel piece = sender as System.Windows.Forms.Panel;
-            System.Console.WriteLine(piece.BackColor);
-            System.Console.WriteLine("coord is {0}", coord.repr());
+
+            Tile tileClicked = board.getTile(coord);
+            if (this.GAMESTATE == 0)
+            {
+                // if its the initial click make sure its of PLAYER
+                if (tileClicked.OccupyingPiece.Player == this.PLAYER)
+                {
+                    System.Console.WriteLine("piece clicked is of cur player");
+                    // enforce the must jump priority
+                    List<Move> availableMoves = board.getValidAvailableMoves(coord, true);
+                    if (availableMoves.Count > 0)
+                    {
+                        System.Console.WriteLine("three are available jumps to be made by the current player");
+                        // so must enforce that click2 makes a move that is in this list
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("three are NOT available jumps to be made by the current player");
+                        // so remove the restriction on only jumps
+                        availableMoves = board.getValidAvailableMoves(coord, false);
+                    }
+
+                    // at this stage there should atleast be some moves available in availableMoves
+                    // (garunteed by check for moves at end of last turn)
+                    board.setHighlightTag(availableMoves, true); // the topos is marked for gui highlighting
+
+                }
+                else
+                {
+                    System.Console.WriteLine("piece clicked is not of cur player");
+                }
+
+            }
+
+
+            // at very end of this function (changes have been made to model)
+            // so update the gui with the changes
+
         }
 
        
