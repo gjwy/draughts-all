@@ -85,7 +85,7 @@ namespace checkers_wf
                     tile.Size = new System.Drawing.Size(tileSize, tileSize);
                     // get the tileIcon/color from the logical tile
                     // modelBoard obj already made previously
-                    Coord coord = new Coord(row, col);
+                    Coord coord = new Coord(col, row);
                     string strColor = modelBoard.getTile(coord).TileIcon;
                     tile.BackColor = System.Drawing.Color.FromName(strColor);
                     // add the event handler

@@ -276,6 +276,11 @@ namespace checkers
 
         public Tuple<Piece, bool> movePiece(Tile fromTile, Tile toTile, List<Move> listOfMoves)
         {
+
+            // IDENTIFIED MOVE NOT BEING SET
+            // DEBUG
+
+
             // req lsOfMoves to identify the move which has
             // been made, (uses tileA and B to determine)
             // got from getValidAvailableMoves function
@@ -288,7 +293,7 @@ namespace checkers
                     break;
                 }
             }
-            if (identifiedMove.Equals(null))
+            if (identifiedMove == null)
             {
                 System.Console.WriteLine("Critical Error (282)");
             }
