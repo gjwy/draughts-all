@@ -140,7 +140,7 @@ namespace checkers_wf
                             // this concerns the logic tile at this stage
                             if (tile.IsOccupied) // then add a corresponding piece to the gui
                             {
-                                System.Threading.Thread.Sleep(30);
+                                //System.Threading.Thread.Sleep(30);
                                 // Todo:
                                 // get the color/type of the piece
 

@@ -287,7 +287,8 @@ namespace checkers
             Move identifiedMove = null;
             foreach (Move move in listOfMoves)
             {
-                if (move.FromPos == fromTile.TileCoord && move.ToPos == toTile.TileCoord)
+                // a complex comparison requiring overload of the Equals method
+                if (move.FromPos.Equals(fromTile.TileCoord) && move.ToPos.Equals(toTile.TileCoord))
                 {
                     identifiedMove = move;
                     break;

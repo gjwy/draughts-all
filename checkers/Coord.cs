@@ -48,6 +48,21 @@ namespace checkers
             return repr;
         }
 
+        public override bool Equals(object obj)
+        {
+            // specification for certain Equals behaviour
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                // cast obj arg (Coord) to Coord (since not null etc)
+                Coord c = (Coord)obj;
+                return (x == c.x) && (y == c.y);
+            }
+        }
+
         /* Apply an instruction to this coord, resulting in a 
          * returned second coord. Doesnt change this coord. */
         public Coord applyToFindToPos(Dictionary<string, int> instruction)
