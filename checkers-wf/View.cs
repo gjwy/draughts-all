@@ -177,6 +177,9 @@ namespace checkers_wf
 
         /* the logic chosen in response to a piece clicked is dependant on the current
          GAMESTATE */
+
+        /* This function can be broken up into smaller functions to aid with applying various game rules
+         * specified in the settings eg mandatory capture, continued capture etc */
         private void tileClickedHandler(object sender, Coord coord)
         {
             System.Console.WriteLine("STAGE is {0}", Stage);
