@@ -180,41 +180,53 @@ namespace checkers_wf
         private void tileClickedHandler(object sender, Coord coord)
         {
             System.Console.WriteLine("STAGE is {0}", Stage);
-            System.Windows.Forms.Panel piece = sender as System.Windows.Forms.Panel;
+            //System.Windows.Forms.Panel piece = sender as System.Windows.Forms.Panel;
 
             Tile tileClicked = board.getTile(coord);
             if (this.Stage == Gamestage.NoClick)
             {
-                // if its the initial click make sure its of PLAYER
-                if (tileClicked.OccupyingPiece.Player == this.PLAYER)
+                // enforce must jump rule if there are pieces with jumps available
+                // so gives error message and prevents state from proceeding
+                // requiring the user to offer a better input
+                // it is an expensive check...?
+                // (for each player piece, check for a jump)
+                // onlyjumps=true
+                List<Tile> tilesContainingPlayerPiecesWithJumps = board.getTilesContainingPlayerPiecesWithValidMoves(PLAYER, true);
+                // if such a tile exists AND the tileClicked is NOT one of them 
+                if (tilesContainingPlayerPiecesWithJumps.Count > 0
+                    && !tilesContainingPlayerPiecesWithJumps.Contains(tileClicked))
                 {
-                    //System.Console.WriteLine("piece clicked is of cur player");
-                    // enforce the must jump priority
-                    List<Move> availableMoves = board.getValidAvailableMoves(coord, true);
-                    if (availableMoves.Count > 0)
-                    {
-                        //System.Console.WriteLine("three are available jumps to be made by the current player");
-                        // so must enforce that click2 makes a move that is in this list
-                    }
-                    else
-                    {
-                        //System.Console.WriteLine("three are NOT available jumps to be made by the current player");
-                        // so remove the restriction on only jumps
-                        availableMoves = board.getValidAvailableMoves(coord, false);
-                    }
-
-                    // at this stage there should atleast be some moves available in availableMoves
-                    // (garunteed by check for moves at end of last turn)
-                    board.setHighlightTag(availableMoves, true); // the topos is marked for gui highlighting
-                    // now the model has been updated correctly (highlights at this stage)
-                    // so update the state
-                    SELECTED = tileClicked;
-                    POTENTIALMOVES = availableMoves;
-                    Stage = Gamestage.OneClick;
+                    changeDisplayMessage("you must capture a piece if possible");
                 }
                 else
                 {
-                    System.Console.WriteLine("piece clicked is not of cur player");
+                    // if its the initial click make sure its of a PIECE AND that pieceis of PLAYER
+                    if (tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == this.PLAYER)
+                    {
+                        //System.Console.WriteLine("piece clicked is of cur player");
+                        // enforce the must jump priority
+                        List<Move> availableMoves = board.getValidAvailableMoves(coord, true);
+                        if (availableMoves.Count == 0)
+                        {
+
+                            //System.Console.WriteLine("three are NOT available jumps to be made by the current player");
+                            // so remove the restriction on only jumps
+                            availableMoves = board.getValidAvailableMoves(coord, false);
+                        }
+
+                        // at this stage there should atleast be some moves available in availableMoves
+                        // (garunteed by check for moves at end of last turn)
+                        board.setHighlightTag(availableMoves, true); // the topos is marked for gui highlighting
+                        // now the model has been updated correctly (highlights at this stage)
+                        // so update the state
+                        SELECTED = tileClicked;
+                        POTENTIALMOVES = availableMoves;
+                        Stage = Gamestage.OneClick;
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("piece clicked is not of cur player");
+                    }
                 }
 
             }

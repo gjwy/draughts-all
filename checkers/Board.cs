@@ -217,7 +217,7 @@ namespace checkers
          * piece and 2) those pieces have valid available moves
          * eg. getValidAvailableMoves() called for each player piece to
          * determine if the tile/piece has validAvailableMoves. --Expensive */
-        public List<Tile> getTilesContainingPlayerPiecesWithValidMoves(string player)
+        public List<Tile> getTilesContainingPlayerPiecesWithValidMoves(string player, bool onlyJumps=false)
         {
             List<Tile> tilesContainingPlayerPiecesWithValidMoves = new List<Tile>();
 
@@ -232,7 +232,7 @@ namespace checkers
                     {
                         // 2) use each tiles coord --> (arg fromCoord) to find 
                         //    the available moves from this piece
-                        List<Move> validAvailableMoves = getValidAvailableMoves(tile.TileCoord);
+                        List<Move> validAvailableMoves = getValidAvailableMoves(tile.TileCoord, onlyJumps);
                         // 3) if there are valid moves from this tile/piece, add this tile to the 
                         // 3) list
                         if (validAvailableMoves.Count != 0) //there are some valid moves from this tile/piece
