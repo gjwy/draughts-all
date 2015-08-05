@@ -3,7 +3,7 @@ using System;
 
 namespace checkers_wf
 {
-    partial class View
+    partial class ViewControler
     {
 
         private System.Windows.Forms.Panel[][] guiTileRefs;

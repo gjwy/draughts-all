@@ -13,20 +13,22 @@ using checkers;
 NEW GAEMS ETC */
 namespace checkers_wf
 {
-    public partial class View : Form
+    public partial class ViewControler : Form
     {
         //options stuff to be put in options etc
         private string startPlayer = "red";
 
         // flow state stuff
         private string GAMETYPE = "";
-        private int GAMESTATE; //enumerate eg 0->wating for first user click etc or a set of bools
+        private enum Gamestage { NoClick, OneClick };
+        private Gamestage Stage;
+        //private int GAMESTAGE; //enumerate eg 0->wating for first user click etc or a set of bools
         private string PLAYER = ""; // the current player
 
 
         private Model board;
 
-        public View(Model board)
+        public ViewControler(Model board)
         {
             this.board = board; //model
 
@@ -98,6 +100,8 @@ namespace checkers_wf
             renderPieces(board); // removes all the guipieces
             undrawTiles(board); // undraw the tiles
             resetToolStripMenuItem.Enabled = false;
+            newGameToolStripMenuItem.Enabled = true;
+            newGameToolStripMenuItem.ToolTipText = null;
             changeDisplayMessage("(gui) board has been reset");
         }
 
@@ -144,10 +148,12 @@ namespace checkers_wf
             
             this.tilePanel.Enabled = true; // allows the tiles to be clicked
             resetToolStripMenuItem.Enabled = true;
+            newGameToolStripMenuItem.Enabled = false;
+            newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
             changeDisplayMessage("ready for local player vs player game");
 
             this.GAMETYPE = "vsPlayer";
-            this.GAMESTATE = 0;
+            this.Stage = (int)Gamestage.NoClick;
             this.PLAYER = startPlayer;
 
             // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
@@ -164,13 +170,15 @@ namespace checkers_wf
             System.Console.WriteLine(tile.BackColor);
         }
 
+        /* the logic chosen in response to a piece clicked is dependant on the current
+         GAMESTATE */
         private void pieceClicked(object sender, Coord coord)
         {
             System.Console.WriteLine("piece has been clicked");
             System.Windows.Forms.Panel piece = sender as System.Windows.Forms.Panel;
 
             Tile tileClicked = board.getTile(coord);
-            if (this.GAMESTATE == 0)
+            if (this.Stage == Gamestage.NoClick)
             {
                 // if its the initial click make sure its of PLAYER
                 if (tileClicked.OccupyingPiece.Player == this.PLAYER)
@@ -200,6 +208,11 @@ namespace checkers_wf
                     System.Console.WriteLine("piece clicked is not of cur player");
                 }
 
+            }
+
+            else if (this.Stage == Gamestage.OneClick)
+            {
+                // TODO
             }
 
 
