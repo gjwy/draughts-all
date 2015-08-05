@@ -85,11 +85,11 @@ namespace checkers_wf
                     tile.Size = new System.Drawing.Size(tileSize, tileSize);
                     // get the tileIcon/color from the logical tile
                     // modelBoard obj already made previously
-                    Coord modelCoord = new Coord(row, col);
-                    string strColor = modelBoard.getTile(modelCoord).TileIcon;
+                    Coord coord = new Coord(row, col);
+                    string strColor = modelBoard.getTile(coord).TileIcon;
                     tile.BackColor = System.Drawing.Color.FromName(strColor);
                     // add the event handler
-                    tile.Click += new System.EventHandler(tileClicked);
+                    tile.Click += (sender, eventArgs) => { tileClickedHandler(sender, coord); };
 
                     tilePanel.Controls.Add(tile);
                     // now add the reference to the gui array
@@ -154,7 +154,7 @@ namespace checkers_wf
                                 piecePanel.BackColor = System.Drawing.Color.FromName(color);
                                 piecePanel.Location = new System.Drawing.Point(10, 10);
                                 // pass along the corresponding model coordinates of this piece...
-                                piecePanel.Click += (sender, eventArgs) => { pieceClicked(sender, tile.TileCoord); };
+                                piecePanel.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
 
                                 // change it to circle / piece image eventually
                                 guiTile.Controls.Add(piecePanel);

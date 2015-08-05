@@ -16,14 +16,17 @@ namespace checkers_wf
     public partial class ViewControler : Form
     {
         //options stuff to be put in options etc
-        private string startPlayer = "red";
+        private string startPlayer = "";
 
         // flow state stuff
         private string GAMETYPE = "";
-        private enum Gamestage { NoClick, OneClick };
+        private enum Gamestage { NoClick, OneClick, OngoingCapture };
         private Gamestage Stage;
+        private Dictionary<string, int> CAPTURED;
         //private int GAMESTAGE; //enumerate eg 0->wating for first user click etc or a set of bools
         private string PLAYER = ""; // the current player
+        private Tile SELECTED;
+        private List<Move> POTENTIALMOVES;
 
 
         private Model board;
@@ -142,6 +145,7 @@ namespace checkers_wf
          * access to the gui elements as well as model methods */
         private void playerVsplayer()
         {
+            startPlayer = "red";
             board.populateGameBoard();       // model method
             renderTiles(board);              // gui method
             renderPieces(board);             // gui method
@@ -150,11 +154,17 @@ namespace checkers_wf
             resetToolStripMenuItem.Enabled = true;
             newGameToolStripMenuItem.Enabled = false;
             newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
-            changeDisplayMessage("ready for local player vs player game");
 
-            this.GAMETYPE = "vsPlayer";
-            this.Stage = (int)Gamestage.NoClick;
-            this.PLAYER = startPlayer;
+            
+
+            CAPTURED = new Dictionary<string, int>();
+            CAPTURED.Add("white", 0);
+            CAPTURED.Add("red", 0);
+            GAMETYPE = "vsPlayer";
+            Stage = (int)Gamestage.NoClick;
+            PLAYER = startPlayer;
+
+            changeDisplayMessage("it is " + PLAYER + " turn");
 
             // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
@@ -163,18 +173,13 @@ namespace checkers_wf
 
 
 
-        private void tileClicked(object sender, EventArgs e)
-        {
-            System.Console.WriteLine("tile has been clicked");
-            System.Windows.Forms.Panel tile = sender as System.Windows.Forms.Panel;
-            System.Console.WriteLine(tile.BackColor);
-        }
+
 
         /* the logic chosen in response to a piece clicked is dependant on the current
          GAMESTATE */
-        private void pieceClicked(object sender, Coord coord)
+        private void tileClickedHandler(object sender, Coord coord)
         {
-            System.Console.WriteLine("piece has been clicked");
+            System.Console.WriteLine("STAGE is {0}", Stage);
             System.Windows.Forms.Panel piece = sender as System.Windows.Forms.Panel;
 
             Tile tileClicked = board.getTile(coord);
@@ -183,17 +188,17 @@ namespace checkers_wf
                 // if its the initial click make sure its of PLAYER
                 if (tileClicked.OccupyingPiece.Player == this.PLAYER)
                 {
-                    System.Console.WriteLine("piece clicked is of cur player");
+                    //System.Console.WriteLine("piece clicked is of cur player");
                     // enforce the must jump priority
                     List<Move> availableMoves = board.getValidAvailableMoves(coord, true);
                     if (availableMoves.Count > 0)
                     {
-                        System.Console.WriteLine("three are available jumps to be made by the current player");
+                        //System.Console.WriteLine("three are available jumps to be made by the current player");
                         // so must enforce that click2 makes a move that is in this list
                     }
                     else
                     {
-                        System.Console.WriteLine("three are NOT available jumps to be made by the current player");
+                        //System.Console.WriteLine("three are NOT available jumps to be made by the current player");
                         // so remove the restriction on only jumps
                         availableMoves = board.getValidAvailableMoves(coord, false);
                     }
@@ -201,7 +206,11 @@ namespace checkers_wf
                     // at this stage there should atleast be some moves available in availableMoves
                     // (garunteed by check for moves at end of last turn)
                     board.setHighlightTag(availableMoves, true); // the topos is marked for gui highlighting
-
+                    // now the model has been updated correctly (highlights at this stage)
+                    // so update the state
+                    SELECTED = tileClicked;
+                    POTENTIALMOVES = availableMoves;
+                    Stage = Gamestage.OneClick;
                 }
                 else
                 {
@@ -212,12 +221,122 @@ namespace checkers_wf
 
             else if (this.Stage == Gamestage.OneClick)
             {
-                // TODO
+                // can assume SELECTED holds a tile (with a valid piece on it)
+                // and POTENTIALMOVES contain some
+
+                // checks the second click is on a piece/tile thats highlighted
+                if (tileClicked.IsHighlighted)
+                {
+                    System.Console.WriteLine("is highlighted!");
+                    Tuple<Piece, bool> result = board.movePiece(SELECTED, tileClicked, POTENTIALMOVES);
+                    System.Console.WriteLine("piece moved");
+                    board.setHighlightTag(POTENTIALMOVES, false);
+                    // check if a piece was captured
+                    if (result.Item1 != null)
+                    {
+                        Piece captured = result.Item1;
+                        CAPTURED[captured.Player] += 1;
+                        SELECTED = tileClicked;
+                        // check if the move resulted in a kinging
+                        if (result.Item2)
+                        {
+                            // then the turn has ended so change player etc
+                            PLAYER = (PLAYER == "red") ? "white" : "red";
+                            changeDisplayMessage("it is " + PLAYER + " turn");
+                            Stage = Gamestage.NoClick;
+                        }
+                        // else not kinged so check for further moves to jump
+                        else
+                        {
+                            List<Move> availableMoves = board.getValidAvailableMoves(coord, true);
+                            if (availableMoves.Count > 0)
+                            {
+                                POTENTIALMOVES = availableMoves;
+                                Stage = Gamestage.OngoingCapture;
+                            }
+                            else
+                            {
+                                PLAYER = (PLAYER == "red") ? "white" : "red";
+                                changeDisplayMessage("it is " + PLAYER + " turn");
+                                Stage = Gamestage.NoClick;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("changing turn");
+                        PLAYER = (PLAYER == "red") ? "white" : "red";
+                        changeDisplayMessage("it is " + PLAYER + " turn");
+                        Stage = Gamestage.NoClick;
+                    }
+                }
+                // else the player has clicked on a non highlighted one of their pieces
+                else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == PLAYER)
+                {
+                    System.Console.WriteLine("it thinkks tile is not highlighted AND its occupied by the cur player piece?");
+                    ////////////
+                    // ALSO THE NW TILE IS CONSIDERED INVALID
+                    // SO SOME ISSUE HERE
+                    System.Console.WriteLine("{0} {1} {2}", tileClicked.IsHighlighted, tileClicked.IsOccupied, tileClicked.OccupyingPiece.Player);
+                    System.Console.WriteLine("potential moves are:");
+                    foreach( Move move in POTENTIALMOVES)
+                    {
+                        System.Console.WriteLine(move.ToPos.repr());
+                    }
+                    System.Console.WriteLine("and the tile clicked was {0}", tileClicked.TileCoord.repr());
+
+
+
+
+
+                    // this if-else block to make the highlight response nicer
+
+                    // if previous clicked tile is not same as just clicked tile
+                    if (SELECTED.TileCoord != tileClicked.TileCoord)
+                    {
+                        // then just update the highlight
+                        board.setHighlightTag(POTENTIALMOVES, false);
+                        Stage = Gamestage.NoClick;
+                        this.tileClickedHandler(null, coord); // problem could be here
+                    }
+                    else
+                    {
+                        // just remove the highlight
+                        board.setHighlightTag(POTENTIALMOVES, false);
+                        Stage = Gamestage.NoClick;
+                    }
+                }
+
+                // sles player has clicked on some invalid tile so remove highlight
+                // CONSIDER REMOVING PREVIOUS ELSE ?
+                else
+                {
+                    System.Console.WriteLine("some invalid tile?");
+                    board.setHighlightTag(POTENTIALMOVES, false);
+                    Stage = Gamestage.NoClick;
+                }
+
+
+            }
+
+            else if (Stage == Gamestage.OngoingCapture)
+            {
+                if (tileClicked == SELECTED)
+                {
+                    board.setHighlightTag(POTENTIALMOVES, true);
+                    SELECTED = tileClicked; // redundant?
+                    Stage = Gamestage.OneClick;
+                }
+                else
+                {
+                    changeDisplayMessage(PLAYER + ", continue the capture sequence");
+                }
             }
 
 
             // at very end of this function (changes have been made to model)
             // so update the gui with the changes
+            renderPieces(board);
 
         }
 

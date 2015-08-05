@@ -274,7 +274,7 @@ namespace checkers
         }
 
 
-        private Tuple<Piece, bool> movePiece(Tile fromTile, Tile toTile, List<Move> listOfMoves)
+        public Tuple<Piece, bool> movePiece(Tile fromTile, Tile toTile, List<Move> listOfMoves)
         {
             // req lsOfMoves to identify the move which has
             // been made, (uses tileA and B to determine)
