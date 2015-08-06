@@ -13,13 +13,18 @@ namespace checkers_wf
             this.label2.Text = newMessage;
         }
 
-        private void changeScoreMessage(Dictionary<string, int> captured)
+        private void changeScoreMessage(Dictionary<string, int> captured = null)
         {
             string score = "Score\n";
-            foreach (KeyValuePair<string, int> item in captured)
+
+            if (captured != null)
             {
-                score += item.Value + " " + item.Key + " pieces captured\n";
+                foreach (KeyValuePair<string, int> item in captured)
+                {
+                    score += item.Value + " " + item.Key + " pieces captured\n";
+                }
             }
+
             this.label1.Text = score;
         }
     }

@@ -108,6 +108,9 @@ namespace checkers_wf
             resetToolStripMenuItem.Enabled = false;
             newGameToolStripMenuItem.Enabled = true;
             newGameToolStripMenuItem.ToolTipText = null;
+
+            
+            changeScoreMessage(); // when called without args resets
             changeDisplayMessage("(gui) board has been reset");
         }
 

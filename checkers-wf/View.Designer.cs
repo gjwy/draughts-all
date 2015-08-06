@@ -86,27 +86,27 @@
             this.localToolStripMenuItem,
             this.multiplayerToolStripMenuItem});
             this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.newGameToolStripMenuItem.Text = "New Game";
             // 
             // localToolStripMenuItem
             // 
             this.localToolStripMenuItem.Name = "localToolStripMenuItem";
-            this.localToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.localToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.localToolStripMenuItem.Text = "vs Computer";
             this.localToolStripMenuItem.Click += new System.EventHandler(this.vsCompToolStripMenuItem_Click);
             // 
             // multiplayerToolStripMenuItem
             // 
             this.multiplayerToolStripMenuItem.Name = "multiplayerToolStripMenuItem";
-            this.multiplayerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.multiplayerToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.multiplayerToolStripMenuItem.Text = "vs Player";
             this.multiplayerToolStripMenuItem.Click += new System.EventHandler(this.vsPlayerToolStripMenuItem_Click);
             // 
             // loadGameToolStripMenuItem
             // 
             this.loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
-            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.loadGameToolStripMenuItem.Text = "Load Game";
             this.loadGameToolStripMenuItem.Click += new System.EventHandler(this.loadGameMenu_Click);
             // 
@@ -114,20 +114,20 @@
             // 
             this.saveGameToolStripMenuItem.Enabled = false;
             this.saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
-            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.saveGameToolStripMenuItem.Text = "Save Game";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.optionsToolStripMenuItem.Text = "Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsMenu_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -135,19 +135,19 @@
             // 
             this.resetToolStripMenuItem.Enabled = false;
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetMenu_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(131, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -184,9 +184,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(4, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 156);
+            this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Score / Stats\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nCHECKER BOARD\r\nINCORRECT \r\nORIENTATION\r\n";
+            this.label1.Text = "Score\r\n";
             // 
             // panel3
             // 
@@ -214,7 +214,7 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "space for the pieces to go";
             // 
-            // View
+            // ViewControler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -228,7 +228,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "View";
+            this.Name = "ViewControler";
             this.Text = "Checkers";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
