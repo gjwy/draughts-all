@@ -123,6 +123,16 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap texture4 {
+            get {
+                object obj = ResourceManager.GetObject("texture4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap wood_plaque {
             get {
                 object obj = ResourceManager.GetObject("wood plaque", resourceCulture);
