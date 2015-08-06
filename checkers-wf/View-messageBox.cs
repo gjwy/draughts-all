@@ -18,8 +18,9 @@ namespace checkers_wf
             string score = "Score\n";
             foreach (KeyValuePair<string, int> item in captured)
             {
-                score += item.Value + " " + item.Key + " pieces captured";
+                score += item.Value + " " + item.Key + " pieces captured\n";
             }
+            this.label1.Text = score;
         }
     }
 }
