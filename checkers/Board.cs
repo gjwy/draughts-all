@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace checkers
 {
-    public class Model
+    public class Board
     {
 
         private Tile[][] internalBoard; // make 2-dimensional
         private int size;
 
-        public Model(int size = 8)
+        public Board(int size = 8)
         {
             this.size = size;
             internalBoard = new Tile[size][]; //creates size-rows

@@ -10,7 +10,7 @@ namespace checkers
     {
         static void Main(string[] args)
         {
-            Model board = new Model();           // model
+            Board board = new Board();           // model
             Gui gui = new Gui();                 // view
             Controller logic = new Controller(board, gui); // controller - model, view goes in here
             

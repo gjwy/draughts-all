@@ -1,4 +1,6 @@
-﻿
+﻿using System.Collections.Generic;
+
+
 namespace checkers_wf
 {
     partial class ViewControler
@@ -9,6 +11,15 @@ namespace checkers_wf
         private void changeDisplayMessage(string newMessage)
         {
             this.label2.Text = newMessage;
+        }
+
+        private void changeScoreMessage(Dictionary<string, int> captured)
+        {
+            string score = "Score\n";
+            foreach (KeyValuePair<string, int> item in captured)
+            {
+                score += item.Value + " " + item.Key + " pieces captured";
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace checkers_wf
         static void Main()
         {
             // creates the model
-            Model model = new Model();
+            Board model = new Board();
 
             // creates the controller
 

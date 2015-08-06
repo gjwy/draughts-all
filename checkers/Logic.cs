@@ -9,10 +9,10 @@ namespace checkers
     public class Controller
     {
 
-        private Model board;
+        private Board board;
         private Gui gui;
 
-        public Controller(Model board, Gui gui)
+        public Controller(Board board, Gui gui)
         {
             this.board = board;
             this.gui = gui;
@@ -21,7 +21,7 @@ namespace checkers
         public void test()
         {
             Console.WriteLine("test1");
-            Model b = new Model();
+            Board b = new Board();
             b.populateGameBoard();
             Coord c = new Coord(2, 2); //this piece
             List<Move> vm = b.getValidAvailableMoves(c);

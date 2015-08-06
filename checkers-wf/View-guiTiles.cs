@@ -50,7 +50,7 @@ namespace checkers_wf
          * ADDITIONALLY, it will place a referene of the compontents in an easy to access array. So when the 
          * logic needs to access the tiles it can do so without having to resort to the expensive find_withtag
          * gui method such was used in the .py version */
-        private void renderTiles(Model modelBoard)
+        private void renderTiles(Board modelBoard)
         {
             // get the size of the board from the logic
             //int size = logic.getSize();
@@ -104,7 +104,7 @@ namespace checkers_wf
         }
 
         /* null the guiTileRefs, clear the tilePanel controls */
-        private void undrawTiles(Model board)
+        private void undrawTiles(Board board)
         {
             guiTileRefs = null;
             tilePanel.Controls.Clear();
@@ -113,7 +113,7 @@ namespace checkers_wf
         // go through the model board, find those with gui needs to be
         // updated set to true, and use the refs array to obtain the gui tile
         // finally set the model back to guineedsupdate=false
-        private void renderPieces(Model modelBoard)
+        private void renderPieces(Board modelBoard)
         {
             // use gui=true tiles from modelBoard.internalBoard
             // find the corresponding panels in guiTileRefs
