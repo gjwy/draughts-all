@@ -146,13 +146,15 @@ namespace checkers_wf
         /* player vs player game flow set appropriate state
          * could be moved somewhere else, but it requires
          * access to the gui elements as well as model methods */
+
+            // reorganise this between this func and the immediate click handler
         private void playerVsplayer()
         {
             startPlayer = "red";
             board.populateGameBoard();       // model method
 
 
-            this.tilePanel.Enabled = true; // allows the tiles to be clicked
+            
             resetToolStripMenuItem.Enabled = true;
             newGameToolStripMenuItem.Enabled = false;
             newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
@@ -170,7 +172,7 @@ namespace checkers_wf
 
             renderTiles(board);              // gui method
             renderPieces(board);             // gui method
-
+            this.tilePanel.Enabled = true; // allows the tiles to be clicked (must be after gui renders)
             changeScoreMessage(CAPTURED);
             changeDisplayMessage("it is " + PLAYER + " turn");
 
