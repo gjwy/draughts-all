@@ -25,7 +25,18 @@ namespace checkers_wf
                 }
             }
 
-            this.label1.Text = score;
+            //this.label1.Text = score;
+        }
+
+        private void changeCapturedDisplay(Dictionary<string, int> captured = null)
+        {
+            // if null dont render for any pile
+            // else render them as if they had been placed on the board
+            // draw a pile of num PLAYER tiles for each side
+            if (captured != null)
+            {
+                // TODO
+            }
         }
     }
 }

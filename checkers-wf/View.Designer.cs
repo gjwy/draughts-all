@@ -44,13 +44,11 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.tilePanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,7 +84,7 @@
             this.localToolStripMenuItem,
             this.multiplayerToolStripMenuItem});
             this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newGameToolStripMenuItem.Text = "New Game";
             // 
             // localToolStripMenuItem
@@ -106,7 +104,7 @@
             // loadGameToolStripMenuItem
             // 
             this.loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
-            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loadGameToolStripMenuItem.Text = "Load Game";
             this.loadGameToolStripMenuItem.Click += new System.EventHandler(this.loadGameMenu_Click);
             // 
@@ -114,20 +112,20 @@
             // 
             this.saveGameToolStripMenuItem.Enabled = false;
             this.saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
-            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveGameToolStripMenuItem.Text = "Save Game";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsMenu_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -135,19 +133,19 @@
             // 
             this.resetToolStripMenuItem.Enabled = false;
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetMenu_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(131, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -171,22 +169,13 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(558, 46);
+            this.panel1.Location = new System.Drawing.Point(543, 46);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(114, 403);
+            this.panel1.Size = new System.Drawing.Size(129, 109);
             this.panel1.TabIndex = 3;
             this.panel1.Tag = "";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Score\r\n";
             // 
             // panel3
             // 
@@ -233,8 +222,6 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.ResumeLayout(false);
@@ -258,7 +245,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel tilePanel;

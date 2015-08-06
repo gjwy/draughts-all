@@ -109,8 +109,9 @@ namespace checkers_wf
             newGameToolStripMenuItem.Enabled = true;
             newGameToolStripMenuItem.ToolTipText = null;
 
-            
-            changeScoreMessage(); // when called without args resets
+
+            //changeScoreMessage(); // when called without args resets
+            changeCapturedDisplay();
             changeDisplayMessage("(gui) board has been reset");
         }
 
@@ -176,7 +177,8 @@ namespace checkers_wf
             renderTiles(board);              // gui method
             renderPieces(board);             // gui method
             this.tilePanel.Enabled = true; // allows the tiles to be clicked (must be after gui renders)
-            changeScoreMessage(CAPTURED);
+            //changeScoreMessage(CAPTURED);
+            changeCapturedDisplay(CAPTURED);
             changeDisplayMessage("it is " + PLAYER + " turn");
 
             // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
@@ -291,7 +293,8 @@ namespace checkers_wf
                         }
                         // for each time the CAPTURED value is changed
                         // update it on the display
-                        changeScoreMessage(CAPTURED);
+                        //changeScoreMessage(CAPTURED);
+                        changeCapturedDisplay(CAPTURED);
                     }
                     else
                     {
@@ -390,7 +393,8 @@ namespace checkers_wf
             // at very end of this function (changes have been made to model)
             // so update the gui with the changes
             renderPieces(board); // gui method taking model arg
-            changeScoreMessage(CAPTURED); // gui method taking control arg
+            //changeScoreMessage(CAPTURED); // gui method taking control arg
+            changeCapturedDisplay(CAPTURED);
 
         }
 
