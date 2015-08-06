@@ -94,7 +94,7 @@ namespace checkers_wf
             resetToolStripMenuItem.Enabled = true;
 
             // give some success message to the display
-            changeDisplayMessage("(gui) board has been populated");
+            //changeDisplayMessage("(gui) board has been populated");
 
         }
 
@@ -179,7 +179,7 @@ namespace checkers_wf
             this.tilePanel.Enabled = true; // allows the tiles to be clicked (must be after gui renders)
             //changeScoreMessage(CAPTURED);
             changeCapturedDisplay(CAPTURED);
-            changeDisplayMessage("it is " + PLAYER + " turn");
+            changeDisplayMessage("Player " + PLAYER + "'s turn");
 
             // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
@@ -214,7 +214,7 @@ namespace checkers_wf
                 if (tilesContainingPlayerPiecesWithJumps.Count > 0
                     && !tilesContainingPlayerPiecesWithJumps.Contains(tileClicked))
                 {
-                    changeDisplayMessage("you must capture a piece if possible");
+                    changeDisplayMessage("You must capture a piece if possible");
                 }
                 else
                 {
@@ -272,7 +272,7 @@ namespace checkers_wf
                         {
                             // then the turn has ended so change player etc
                             PLAYER = (PLAYER == "red") ? "white" : "red";
-                            changeDisplayMessage("it is " + PLAYER + " turn");
+                            changeDisplayMessage("Player " + PLAYER + "'s turn");
                             STAGE = Gamestage.NoClick;
                         }
                         // else not kinged so check for further moves to jump
@@ -287,7 +287,7 @@ namespace checkers_wf
                             else
                             {
                                 PLAYER = (PLAYER == "red") ? "white" : "red";
-                                changeDisplayMessage("it is " + PLAYER + " turn");
+                                changeDisplayMessage("Player " + PLAYER + "'s turn");
                                 STAGE = Gamestage.NoClick;
                             }
                         }
@@ -300,7 +300,7 @@ namespace checkers_wf
                     {
                         System.Console.WriteLine("changing turn");
                         PLAYER = (PLAYER == "red") ? "white" : "red";
-                        changeDisplayMessage("it is " + PLAYER + " turn");
+                        changeDisplayMessage("Player " + PLAYER + "'s turn");
                         STAGE = Gamestage.NoClick;
                     }
                 }
@@ -363,7 +363,7 @@ namespace checkers_wf
                 }
                 else
                 {
-                    changeDisplayMessage(PLAYER + ", continue the capture sequence");
+                    changeDisplayMessage("Player " + PLAYER + ", continue the capture sequence");
                 }
             }
             // at the end of the processing of the input, check that there

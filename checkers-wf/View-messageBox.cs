@@ -10,7 +10,7 @@ namespace checkers_wf
          * an instruction or general information to the player. */
         private void changeDisplayMessage(string newMessage)
         {
-            this.label2.Text = newMessage;
+            this.label1.Text = newMessage;
         }
 
         private void changeScoreMessage(Dictionary<string, int> captured = null)

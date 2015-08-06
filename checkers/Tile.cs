@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace checkers
 {
@@ -11,6 +12,7 @@ namespace checkers
         private bool isOccupied;
         private Piece occupyingPiece;
         private string tileIcon;
+        private System.Drawing.Image realTileIcon;
         bool isOccupyingPieceKing;
         Coord tileCoord;
         bool isHighlighted;
@@ -21,7 +23,8 @@ namespace checkers
         {
             isOccupied = false;
             occupyingPiece = null;
-            tileIcon = null; ;
+            tileIcon = null;
+            realTileIcon = null;
             isOccupyingPieceKing = false;
             tileCoord = null;
             isHighlighted = false;
@@ -98,6 +101,18 @@ namespace checkers
             get
             {
                 return guiMustBeUpdated;
+            }
+        }
+
+        public Image RealTileIcon
+        {
+            get
+            {
+                return realTileIcon;
+            }
+            set
+            {
+                realTileIcon = value;
             }
         }
 

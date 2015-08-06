@@ -1,5 +1,6 @@
 ﻿using checkers;
 using System;
+using System.Drawing;
 
 namespace checkers_wf
 {
@@ -86,8 +87,10 @@ namespace checkers_wf
                     // get the tileIcon/color from the logical tile
                     // modelBoard obj already made previously
                     Coord coord = new Coord(col, row);
-                    string strColor = modelBoard.getTile(coord).TileIcon;
-                    tile.BackColor = System.Drawing.Color.FromName(strColor);
+                    //string strColor = modelBoard.getTile(coord).TileIcon;
+                    //tile.BackColor = System.Drawing.Color.FromName(strColor);
+                    Image tileIcon = modelBoard.getTile(coord).RealTileIcon;
+                    tile.BackgroundImage = tileIcon;
                     // add the event handler
                     tile.Click += (sender, eventArgs) => { tileClickedHandler(sender, coord); };
 
