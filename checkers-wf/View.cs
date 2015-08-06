@@ -378,7 +378,7 @@ namespace checkers_wf
             {
                 // display winner / scores
                 // no valid moves for ~PLAYER, 
-                changeDisplayMessage("Player " + PLAYER + " wins!");
+                changeDisplayMessage("Player " + WINNER + " wins!");
 
                 // TODO: cleanup game and prog to be ready for next game
 
