@@ -45,6 +45,8 @@ namespace checkers_wf
 
             InitializeComponent(); //view
             // drawTiles(); // will be moved out of the initialiser <<==
+            renderTiles(board);
+
         }
 
        
@@ -180,7 +182,7 @@ namespace checkers_wf
             STAGE = Gamestage.NoClick;
             PLAYER = startPlayer;
 
-            renderTiles(board);              // gui method
+            //renderTiles(board);              // gui method
             renderPieces(board);             // gui method
             this.tilePanel.Enabled = true; // allows the tiles to be clicked (must be after gui renders)
             //changeScoreMessage(CAPTURED);
