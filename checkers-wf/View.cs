@@ -15,6 +15,8 @@ namespace checkers_wf
 {
     public partial class ViewControler : Form
     {
+        
+
         //options stuff to be put in options etc
         private string startPlayer = "";
 
@@ -36,6 +38,9 @@ namespace checkers_wf
 
         public ViewControler(Board board)
         {
+            // prevent flickering double buffering
+            this.DoubleBuffered = true;
+
             this.board = board; //model
 
             InitializeComponent(); //view
