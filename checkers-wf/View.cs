@@ -92,7 +92,8 @@ namespace checkers_wf
 
             // enable the clicking of the resetMenu_Click item
             resetToolStripMenuItem.Enabled = true;
-
+            newGameToolStripMenuItem.Enabled = false;
+            newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
             // give some success message to the display
             //changeDisplayMessage("(gui) board has been populated");
 
