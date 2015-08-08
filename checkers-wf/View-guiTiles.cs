@@ -147,26 +147,16 @@ namespace checkers_wf
                             System.Windows.Forms.Panel guiTile = guiTileRefs[row][col];
                         
 
-                            // this concerns the logic tile at this stage
-                            if (tile.IsOccupied) // then add a corresponding piece to the gui
-                            {
-                                //System.Threading.Thread.Sleep(30);
-                                // Todo:
-                                // get the color/type of the piece
-
-                                //string color = tile.OccupyingPiece.Player; (when properly added the model)
-                                string color = tile.OccupyingPiece.Icon;
                             
-                                // so create an appropriately colored component
-                                // and add it to this guiTile
-                                System.Windows.Forms.Panel piecePanel = new System.Windows.Forms.Panel();
-                                piecePanel.Size = new System.Drawing.Size(20, 20);
-                                piecePanel.BackColor = System.Drawing.Color.FromName(color);
-                                piecePanel.Location = new System.Drawing.Point(10, 10);
-                                // pass along the corresponding model coordinates of this piece...
-                                piecePanel.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
+                            if (tile.IsOccupied)
+                            {
+                                string player = tile.OccupyingPiece.Player;
+                                CirclePanel piecePanel = new CirclePanel(player);
 
-                                // change it to circle / piece image eventually
+                                piecePanel.BackColor = Color.Transparent; // this set in the current main thread for visual priority
+                                piecePanel.Size = new System.Drawing.Size(20, 20);
+                                piecePanel.Location = new System.Drawing.Point(10, 10);
+                                piecePanel.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
                                 guiTile.Controls.Add(piecePanel);
                             }
                             else // remove the corresponding gui piece

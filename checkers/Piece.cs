@@ -20,7 +20,6 @@ namespace checkers
         private string ptype;
         private Coord currentPosition;
         private List<Coord> posHistory;
-        private string icon;
 
         public Piece(string player, string ptype, Coord initialPosition)
         {
@@ -29,7 +28,7 @@ namespace checkers
             currentPosition = initialPosition; //eg initialPos has been initialised elsewhere, this is assignment
             posHistory = new List<Coord>();//initialise the variable len array of int[2] elements
             posHistory.Add(this.currentPosition);//add initial pos as the first element to it
-            icon = (player == "white") ? "white" : "red";
+            
        }
 
         public void updatePosition(Coord newPosition)
@@ -107,7 +106,6 @@ namespace checkers
         public void upgradeToKing()
         {
             ptype = "d_king";
-            icon = (player == "red") ? "red" : "white";
         }
 
         public string Player
@@ -134,13 +132,7 @@ namespace checkers
             }
         }
 
-        public string Icon
-        {
-            get
-            {
-                return icon;
-            }
-        }
+       
 
     }
 }
