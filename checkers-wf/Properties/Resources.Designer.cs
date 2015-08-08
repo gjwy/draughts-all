@@ -63,6 +63,26 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _200_1700_big_0 {
+            get {
+                object obj = ResourceManager.GetObject("_200_1700_big_0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _384b3b8c_b67e_440c_8804_62e5fbd55510_400 {
+            get {
+                object obj = ResourceManager.GetObject("_384b3b8c_b67e_440c_8804_62e5fbd55510_400", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _42_Wood_Grain_Texture_1 {
             get {
                 object obj = ResourceManager.GetObject("_42_Wood_Grain_Texture_1", resourceCulture);
@@ -73,9 +93,29 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _89b3fc5b24328d075f9f34397ee07aca {
+            get {
+                object obj = ResourceManager.GetObject("_89b3fc5b24328d075f9f34397ee07aca", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap banner {
             get {
                 object obj = ResourceManager.GetObject("banner", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap black_pattern_tile {
+            get {
+                object obj = ResourceManager.GetObject("black_pattern_tile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -116,6 +156,36 @@ namespace checkers_wf.Properties {
         internal static System.Drawing.Bitmap fpgJx {
             get {
                 object obj = ResourceManager.GetObject("fpgJx", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap il_570xN_481011284_bkx7 {
+            get {
+                object obj = ResourceManager.GetObject("il_570xN_481011284_bkx7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Indian_Premium_Black_Slab_464x464 {
+            get {
+                object obj = ResourceManager.GetObject("Indian_Premium_Black_Slab_464x464", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap off_white_micro_fiber_cloth_fabric_texture_190x190 {
+            get {
+                object obj = ResourceManager.GetObject("off_white_micro_fiber_cloth_fabric_texture_190x190", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -87,10 +87,17 @@ namespace checkers_wf
                     // get the tileIcon/color from the logical tile
                     // modelBoard obj already made previously
                     Coord coord = new Coord(col, row);
+                    Tile modelTile = modelBoard.getTile(coord);
                     //string strColor = modelBoard.getTile(coord).TileIcon;
                     //tile.BackColor = System.Drawing.Color.FromName(strColor);
-                    Image tileIcon = modelBoard.getTile(coord).RealTileIcon;
-                    tile.BackgroundImage = tileIcon;
+                    if (modelTile.TileIcon == "white")
+                    {
+                        tile.BackgroundImage = checkers_wf.Properties.Resources.off_white_micro_fiber_cloth_fabric_texture_190x190;
+                    }
+                    if (modelTile.TileIcon == "black")
+                    {
+                        tile.BackgroundImage = checkers_wf.Properties.Resources.Indian_Premium_Black_Slab_464x464;
+                    }
                     // add the event handler
                     tile.Click += (sender, eventArgs) => { tileClickedHandler(sender, coord); };
 

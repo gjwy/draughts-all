@@ -40,12 +40,10 @@ namespace checkers
                     if ((row % 2) == 0)
                     {
                         tile.TileIcon = ((col % 2) == 0) ? "white" : "black";
-                        tile.RealTileIcon = ((col % 2) == 0) ? checkers.Properties.Resources.il_570xN_481011284_bkx7 : checkers.Properties.Resources._200_1700_big_0;
                     }
                     else
                     {
                         tile.TileIcon = ((col % 2) == 0) ? "black" : "white";
-                        tile.RealTileIcon = ((col % 2) == 0) ? checkers.Properties.Resources._200_1700_big_0 : checkers.Properties.Resources.il_570xN_481011284_bkx7; 
                     }
 
                     listOfTiles[col] = tile;
