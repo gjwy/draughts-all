@@ -33,7 +33,7 @@ namespace checkers_wf
                 System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(playerColor);
                 // draw a filled elipse with the brush
                 // TODO: change this to an image
-                graphic.FillEllipse(myBrush, new Rectangle(0, 0,this.Height-1, this.Width));
+                graphic.FillEllipse(myBrush, new Rectangle(0, 0,this.Height-1, this.Width-1));
                
                 // cleanup the tools
                 myBrush.Dispose();
