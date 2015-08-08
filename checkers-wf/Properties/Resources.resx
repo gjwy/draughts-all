@@ -163,9 +163,6 @@
   <data name="off_white_micro_fiber_cloth_fabric_texture_190x190" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\off-white-micro-fiber-cloth-fabric-texture-190x190.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="red_piece_m" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\red piece_m.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="_89b3fc5b24328d075f9f34397ee07aca" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\89b3fc5b24328d075f9f34397ee07aca.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

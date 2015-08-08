@@ -14,12 +14,12 @@ namespace checkers_wf
     public class CirclePanel : Panel
     {
 
-        private Image fillImage;
+        private Color playerColor;
 
         // constructor takes the player (=color)
         public CirclePanel(string playerColor)
         {
-            fillImage = (playerColor == "red") ? checkers_wf.Properties.Resources.red_piece_m : checkers_wf.Properties.Resources.woodplaque;
+            this.playerColor = Color.FromName(playerColor);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -30,7 +30,7 @@ namespace checkers_wf
                 // get the graphics obj used to paint the panel
                 Graphics graphic = e.Graphics;
                 // create a brush with playerColor colored paint
-                System.Drawing.TextureBrush myBrush = new System.Drawing.TextureBrush(fillImage, new Rectangle(0,0,this.Height-1,this.Width-1));
+                System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(playerColor);
                 // draw a filled elipse with the brush
                 // TODO: change this to an image
                 graphic.FillEllipse(myBrush, new Rectangle(0, 0,this.Height-1, this.Width));
