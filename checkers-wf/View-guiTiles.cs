@@ -153,7 +153,8 @@ namespace checkers_wf
                                 string player = tile.OccupyingPiece.Player;
                                 CirclePanel piecePanel = new CirclePanel(player);
 
-                                piecePanel.BackColor = Color.Transparent; // this set in the current main thread for visual priority
+                                //piecePanel.BackColor = Color.Transparent; // this set in the current main thread for visual priority
+                                
                                 piecePanel.Size = new System.Drawing.Size(20, 20);
                                 piecePanel.Location = new System.Drawing.Point(10, 10);
                                 piecePanel.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
