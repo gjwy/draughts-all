@@ -1,6 +1,8 @@
 ﻿using checkers;
 using System;
 using System.Drawing;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace checkers_wf
 {
@@ -123,7 +125,7 @@ namespace checkers_wf
         // go through the model board, find those with gui needs to be
         // updated set to true, and use the refs array to obtain the gui tile
         // finally set the model back to guineedsupdate=false
-        private void renderPieces(Board modelBoard)
+        private void renderAllPieces(Board modelBoard)
         {
             // use gui=true tiles from modelBoard.internalBoard
             // find the corresponding panels in guiTileRefs
@@ -179,5 +181,39 @@ namespace checkers_wf
                 }
             }
         }
+
+        /* A general function to replace the repeated calls to the render pieces function at the end of every turn.
+         * Takes a list of coords of tiles which are required to be updated on the display, rather than checking every one 
+         * and updating those required. Guitiles will need to be updated when they are marked for highlighting or when
+         * a piece has moved to or from them. 
+         Makes use of the guiTileRefs array */
+        private void updateGuiTiles(List<Coord> tilesToUpdate)
+        {
+            foreach (Coord c in tilesToUpdate)
+            {
+                Tile modelTile = board.getTile(c);
+                Panel guiTile = guiTileRefs[c.Y][c.X];
+                // update the properties
+                // highlighting
+                guiTile.BackColor = (modelTile.IsHighlighted) ? Color.DarkBlue : guiTile.BackColor;
+                // piece
+                if (modelTile.IsOccupied)
+                {
+                    string player = modelTile.OccupyingPiece.Player;
+                    CirclePanel guiPiece = new CirclePanel(player);
+                    guiPiece.BackColor = Color.Transparent;
+                    guiPiece.Size = new System.Drawing.Size(20, 20);
+                    guiPiece.Location = new System.Drawing.Point(10, 10);
+                    guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, modelTile.TileCoord); };
+                    guiTile.Controls.Add(guiPiece);
+                }
+                else
+                {
+                    guiTile.Controls.Clear();
+                }
+            }
+        }
+
+
     }
 }

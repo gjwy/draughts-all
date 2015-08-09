@@ -259,12 +259,12 @@ namespace checkers
          * 
          * Input is the result returned from the getValidAvailableMoves
          * function. That is, a list of moves for a certain piece. */
-        public void setHighlightTag(List<Move> validAvailableMoves, bool highlightValue)
+        public void setHighlightTag(List<Coord> listOfTileCoords, bool highlightValue)
         {
-            foreach (Move mv in validAvailableMoves)
+            foreach (Coord c in listOfTileCoords)
             {
                 // set the tile in the board at that toPos to the highightValue
-                getTile(mv.ToPos).IsHighlighted = highlightValue;
+                getTile(c).IsHighlighted = highlightValue;
                 // since the func returns ref, this should work 
             }
         }
