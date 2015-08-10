@@ -222,14 +222,14 @@ namespace checkers_wf
                     guiPiece.Size = new System.Drawing.Size(20, 20);
                     guiPiece.Location = new System.Drawing.Point(10, 10);
                     guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, modelTile.TileCoord); };
-                    guiPiece.Name = "guiPiece";
+                    guiPiece.Name = "guiPiece"; // 
                     guiTile.Controls.Add(guiPiece);
                 }
                 if (!modelTile.IsOccupied)
                 {
                     System.Console.WriteLine(modelTile.TileCoord.repr() + " is no longer occupied so delete the guioPiece off it");
                     // debug, get a list of the controls contained by guitiles at this point (maybe its not removving the correct one)
-                    guiTile.Controls.RemoveByKey("guiPiece");
+                    guiTile.Controls.RemoveByKey("guiPiece"); //
                     System.Console.WriteLine("GUIPIECE SHOULD BE REMOVED HERE");
                 }
             }
