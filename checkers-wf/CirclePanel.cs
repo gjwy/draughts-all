@@ -40,6 +40,7 @@ namespace checkers_wf
                 graphic.Dispose();
             }
         }
+        
 
     }
 }

@@ -335,9 +335,9 @@ namespace checkers_wf
                         changeDisplayMessage("Player " + PLAYER + "'s turn");
                         STAGE = Gamestage.NoClick;
                     }
-                    System.Console.WriteLine("3size is " + tilesChanged.Count);
+                    System.Console.WriteLine("TILES TO CHANGE SHOULD INCLUDE THE JUMPED AND FROM AND TO " + tilesChanged.Count);
                     updateGuiTiles(tilesChanged);
-                    tilesChanged.Clear();
+                    //tilesChanged.Clear();
                 }
                 // else the player has clicked on a non highlighted one of their pieces
                 else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == PLAYER)

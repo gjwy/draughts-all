@@ -153,13 +153,14 @@ namespace checkers_wf
                             if (tile.IsOccupied)
                             {
                                 string player = tile.OccupyingPiece.Player;
-                                CirclePanel piecePanel = new CirclePanel(player);
+                                CirclePanel guiPiece = new CirclePanel(player);
 
-                                piecePanel.BackColor = Color.Transparent; // this set in the current main thread for visual priority
-                                piecePanel.Size = new System.Drawing.Size(20, 20);
-                                piecePanel.Location = new System.Drawing.Point(10, 10);
-                                piecePanel.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
-                                guiTile.Controls.Add(piecePanel);
+                                guiPiece.BackColor = Color.Transparent; // this set in the current main thread for visual priority
+                                guiPiece.Size = new System.Drawing.Size(20, 20);
+                                guiPiece.Location = new System.Drawing.Point(10, 10);
+                                guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
+                                guiPiece.Name = "guiPiece"; //
+                                guiTile.Controls.Add(guiPiece);
                             }
                             else // remove the corresponding gui piece
                                 // since this means guineedsupdating=true, and there are NO pieces on the logic tile
