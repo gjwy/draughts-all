@@ -208,7 +208,7 @@ namespace checkers_wf
                     highlightTile.Name = "highlightTile";
                     guiTile.Controls.Add(highlightTile);
                 }
-                else
+                if (!modelTile.IsHighlighted)
                 {
                     guiTile.Controls.RemoveByKey("highlightTile");
                     System.Console.WriteLine("HIGHLIGHT SHOULD BE REMOVED HERE");
@@ -225,9 +225,10 @@ namespace checkers_wf
                     guiPiece.Name = "guiPiece";
                     guiTile.Controls.Add(guiPiece);
                 }
-                else
+                if (!modelTile.IsOccupied)
                 {
                     System.Console.WriteLine(modelTile.TileCoord.repr() + " is no longer occupied so delete the guioPiece off it");
+                    // debug, get a list of the controls contained by guitiles at this point (maybe its not removving the correct one)
                     guiTile.Controls.RemoveByKey("guiPiece");
                     System.Console.WriteLine("GUIPIECE SHOULD BE REMOVED HERE");
                 }
