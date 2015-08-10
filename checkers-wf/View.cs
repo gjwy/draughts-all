@@ -249,6 +249,7 @@ namespace checkers_wf
                         }
                         board.setHighlightTag(tilesToHighlight, true); // the topos is marked for gui highlighting
                         // update only required tiles of the gui, rather than looking through whole thing
+                        
                         updateGuiTiles(tilesToHighlight);
                         // now the model has been updated correctly (highlights at this stage)
                         // so update the state
@@ -282,12 +283,13 @@ namespace checkers_wf
                     {
                         tilesChanged.Add(move.ToPos); // add those whows highlight value WILL be changed..
                     }
-
+                    System.Console.WriteLine("1size is " + tilesChanged.Count);
                     board.setHighlightTag(tilesChanged, false);
 
                     // the tiles involced in the move will have changed (tileFrom and TileTo) ALSO potentially tileJumped
                     tilesChanged.Add(SELECTED.TileCoord);
                     tilesChanged.Add(tileClicked.TileCoord);
+                    System.Console.WriteLine("2size is " + tilesChanged.Count);
 
                     // check if a piece was captured
                     if (result.Item1 != null)
@@ -333,7 +335,7 @@ namespace checkers_wf
                         changeDisplayMessage("Player " + PLAYER + "'s turn");
                         STAGE = Gamestage.NoClick;
                     }
-
+                    System.Console.WriteLine("3size is " + tilesChanged.Count);
                     updateGuiTiles(tilesChanged);
                     tilesChanged.Clear();
                 }

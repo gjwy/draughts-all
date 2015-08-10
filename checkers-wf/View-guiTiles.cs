@@ -194,9 +194,26 @@ namespace checkers_wf
                 Tile modelTile = board.getTile(c);
                 Panel guiTile = guiTileRefs[c.Y][c.X];
                 // update the properties
-                // highlighting
-                guiTile.BackColor = (modelTile.IsHighlighted) ? Color.DarkBlue : guiTile.BackColor;
-                // piece
+                // highlighting (add a highlight panel to the tile)
+
+                if (modelTile.IsHighlighted)
+                {
+                    System.Console.WriteLine("highlight something");
+                    //guiTile.BackColor = (modelTile.IsHighlighted) ? Color.DarkBlue : guiTile.BackColor;
+                    Panel highlightTile = new Panel();
+                    highlightTile.BackColor = Color.Blue;
+                    highlightTile.Size = new System.Drawing.Size(20, 20);
+                    highlightTile.Location = new System.Drawing.Point(0, 0);
+                    highlightTile.Click += (sender, eventArgs) => { tileClickedHandler(sender, modelTile.TileCoord); };
+                    highlightTile.Name = "highlightTile";
+                    guiTile.Controls.Add(highlightTile);
+                }
+                else
+                {
+                    guiTile.Controls.RemoveByKey("highlightTile");
+                    System.Console.WriteLine("HIGHLIGHT SHOULD BE REMOVED HERE");
+                }
+                // piece (add a piece panel to the tile)
                 if (modelTile.IsOccupied)
                 {
                     string player = modelTile.OccupyingPiece.Player;
@@ -205,11 +222,14 @@ namespace checkers_wf
                     guiPiece.Size = new System.Drawing.Size(20, 20);
                     guiPiece.Location = new System.Drawing.Point(10, 10);
                     guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, modelTile.TileCoord); };
+                    guiPiece.Name = "guiPiece";
                     guiTile.Controls.Add(guiPiece);
                 }
                 else
                 {
-                    guiTile.Controls.Clear();
+                    System.Console.WriteLine(modelTile.TileCoord.repr() + " is no longer occupied so delete the guioPiece off it");
+                    guiTile.Controls.RemoveByKey("guiPiece");
+                    System.Console.WriteLine("GUIPIECE SHOULD BE REMOVED HERE");
                 }
             }
         }
