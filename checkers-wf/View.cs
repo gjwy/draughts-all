@@ -207,7 +207,7 @@ namespace checkers_wf
         {
             System.Console.WriteLine("STAGE is {0}", STAGE);
             //System.Windows.Forms.Panel piece = sender as System.Windows.Forms.Panel;
-
+            List<Coord> tilesToChange = new List<Coord>();
             Tile tileClicked = board.getTile(coord);
             if (this.STAGE == Gamestage.NoClick)
             {
@@ -248,9 +248,9 @@ namespace checkers_wf
                             tilesToHighlight.Add(move.ToPos);
                         }
                         board.setHighlightTag(tilesToHighlight, true); // the topos is marked for gui highlighting
-                        // update only required tiles of the gui, rather than looking through whole thing
-                        
-                        updateGuiTiles(tilesToHighlight);
+                                                                       // update only required tiles of the gui, rather than looking through whole thing
+
+                        tilesToChange.AddRange(tilesToHighlight);
                         // now the model has been updated correctly (highlights at this stage)
                         // so update the state
                         SELECTED = tileClicked;
@@ -269,8 +269,7 @@ namespace checkers_wf
             {
                 // can assume SELECTED holds a tile (with a valid piece on it)
                 // and POTENTIALMOVES contain some
-
-                List<Coord> tilesChanged = new List<Coord>();
+                
 
                 // checks the second click is on a piece/tile thats highlighted (thus its in potential moves)
                 if (tileClicked.IsHighlighted)
@@ -278,24 +277,23 @@ namespace checkers_wf
                     System.Console.WriteLine("is highlighted!");
                     Tuple<Piece, bool> result = board.movePiece(SELECTED, tileClicked, POTENTIALMOVES);
 
-
+                    List<Coord> tilesToHighlight = new List<Coord>();
                     foreach (Move move in POTENTIALMOVES) // remove the highlights
                     {
-                        tilesChanged.Add(move.ToPos); // add those whows highlight value WILL be changed..
+                        tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
                     }
-                    System.Console.WriteLine("1size is " + tilesChanged.Count);
-                    board.setHighlightTag(tilesChanged, false);
+                    board.setHighlightTag(tilesToHighlight, false);
 
                     // the tiles involced in the move will have changed (tileFrom and TileTo) ALSO potentially tileJumped
-                    tilesChanged.Add(SELECTED.TileCoord);
-                    tilesChanged.Add(tileClicked.TileCoord);
-                    System.Console.WriteLine("2size is " + tilesChanged.Count);
+                    tilesToChange.AddRange(tilesToHighlight);
+                    tilesToChange.Add(SELECTED.TileCoord);
+                    tilesToChange.Add(tileClicked.TileCoord);
 
                     // check if a piece was captured
                     if (result.Item1 != null)
                     {
                         Piece captured = result.Item1;
-                        tilesChanged.Add(captured.CurrentPosition); // the tile which was jumped must be updated
+                        tilesToChange.Add(captured.CurrentPosition); // the tile which was jumped must be updated
 
                         CAPTURED[captured.Player] += 1;
                         SELECTED = tileClicked;
@@ -335,9 +333,7 @@ namespace checkers_wf
                         changeDisplayMessage("Player " + PLAYER + "'s turn");
                         STAGE = Gamestage.NoClick;
                     }
-                    System.Console.WriteLine("TILES TO CHANGE SHOULD INCLUDE THE JUMPED AND FROM AND TO " + tilesChanged.Count);
-                    updateGuiTiles(tilesChanged);
-                    //tilesChanged.Clear();
+                    
                 }
                 // else the player has clicked on a non highlighted one of their pieces
                 else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == PLAYER)
@@ -360,9 +356,10 @@ namespace checkers_wf
 
                     // this if-else block to make the highlight response nicer
 
+                    List<Coord> tilesToHighlight = new List<Coord>();
                     foreach (Move move in POTENTIALMOVES) // remove the highlights
                     {
-                        tilesChanged.Add(move.ToPos); // add those whows highlight value WILL be changed..
+                        tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
                     }
 
                     // if previous clicked tile is not same as just clicked tile
@@ -371,16 +368,16 @@ namespace checkers_wf
                         // then just update the highlight
 
 
-                        board.setHighlightTag(tilesChanged, false);
-                        updateGuiTiles(tilesChanged);
+                        board.setHighlightTag(tilesToHighlight, false);
+                        tilesToChange.AddRange(tilesToHighlight);
                         STAGE = Gamestage.NoClick;
                         this.tileClickedHandler(null, coord); // problem could be here
                     }
                     else
                     {
                         // just remove the highlight
-                        board.setHighlightTag(tilesChanged, false);
-                        updateGuiTiles(tilesChanged);
+                        board.setHighlightTag(tilesToHighlight, false);
+                        tilesToChange.AddRange(tilesToHighlight);
                         STAGE = Gamestage.NoClick;
                     }
                 }
@@ -390,12 +387,15 @@ namespace checkers_wf
                 else
                 {
                     System.Console.WriteLine("some invalid tile?");
+
+                    List<Coord> tilesToHighlight = new List<Coord>();
                     foreach (Move move in POTENTIALMOVES) // remove the highlights
                     {
-                        tilesChanged.Add(move.ToPos); // add those whows highlight value WILL be changed..
+                        tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
                     }
 
-                    board.setHighlightTag(tilesChanged, false);
+                    board.setHighlightTag(tilesToHighlight, false);
+                    tilesToChange.AddRange(tilesToHighlight);
                     STAGE = Gamestage.NoClick;
                 }
 
@@ -404,17 +404,17 @@ namespace checkers_wf
 
             else if (STAGE == Gamestage.OngoingCapture)
             {
-                List<Coord> tilesChanged = new List<Coord>();
 
                 if (tileClicked == SELECTED)
                 {
+                    List<Coord> tilesToHighlight = new List<Coord>();
                     foreach (Move move in POTENTIALMOVES) // remove the highlights
                     {
-                        tilesChanged.Add(move.ToPos); // add those whows highlight value WILL be changed..
+                        tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
                     }
 
-                    board.setHighlightTag(tilesChanged, false);
-                    updateGuiTiles(tilesChanged);
+                    board.setHighlightTag(tilesToHighlight, false);
+                    tilesToChange.AddRange(tilesToHighlight);
                     SELECTED = tileClicked; // redundant?
                     STAGE = Gamestage.OneClick;
                 }
@@ -451,6 +451,8 @@ namespace checkers_wf
             // so update the gui with the changes
             //renderAllPieces(board); // gui method taking model arg
             //changeScoreMessage(CAPTURED); // gui method taking control arg
+    
+            updateGuiTiles(tilesToChange);
             changeCapturedDisplay(CAPTURED);
 
         }

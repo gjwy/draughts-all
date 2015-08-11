@@ -228,9 +228,16 @@ namespace checkers_wf
                 }
                 if (!modelTile.IsOccupied)
                 {
-                    System.Console.WriteLine(modelTile.TileCoord.repr() + " is no longer occupied so delete the guioPiece off it");
-                    // debug, get a list of the controls contained by guitiles at this point (maybe its not removving the correct one)
-                    guiTile.Controls.RemoveByKey("guiPiece"); //
+                    /* The greater issue being that a given tile should only have one piece on it anyway.
+                     * need to figure out why there are duplicates.
+                     * seems to be related to those tiles which start with a piece on them
+                     * maybe when it is clicked, a 2nd piece is being redrawn
+                     * For now, this should remove all 'pieces' from the tile */
+                    while (guiTile.Controls.ContainsKey("guiPiece"))
+                    {
+                        guiTile.Controls.RemoveByKey("guiPiece");
+                    }
+                    
                     System.Console.WriteLine("GUIPIECE SHOULD BE REMOVED HERE");
                 }
             }
