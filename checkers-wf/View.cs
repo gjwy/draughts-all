@@ -190,7 +190,7 @@ namespace checkers_wf
 
         private void tileClickedHandler(object sender, Coord coord)
         {
-
+            // interpret clicks based on the Stage variable
 
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
 
@@ -203,7 +203,7 @@ namespace checkers_wf
             }
             else if (this.STAGE == Gamestage.OneClick)
             {
-                secondClickMade();
+                tilesWhichHaveChanged = secondClickMade(tileClicked);
             }
             else if (STAGE == Gamestage.OngoingCapture)
             {
@@ -211,12 +211,13 @@ namespace checkers_wf
             }
 
             // finally do stuff eg send the tiles which have changed to be refreshed by the gui display
+            // tilesWhichHaveChanged goes in here
             finaly();
 
 
         }
 
-
+        // done
         private List<Coord> firstClickMade(Tile tileClicked)
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
@@ -251,6 +252,7 @@ namespace checkers_wf
                 POTENTIALMOVES = availableMoves;
                 STAGE = Gamestage.OneClick;
             }
+
             else
             {
                 System.Console.WriteLine("piece clicked is not of cur player");
@@ -262,8 +264,9 @@ namespace checkers_wf
         
 
 
-        private void secondClickMade()
+        private List<Coord> secondClickMade(Tile tileClicked)
         {
+            List<Coord> tilesWhichHaveChanged = new List<Coord>();
             // can assume SELECTED holds a tile (with a valid piece on it)
             // and POTENTIALMOVES contain some
 
@@ -274,127 +277,84 @@ namespace checkers_wf
                 System.Console.WriteLine("is highlighted!");
                 Tuple<Piece, bool> result = board.movePiece(SELECTED, tileClicked, POTENTIALMOVES);
 
-                List<Coord> tilesToHighlight = new List<Coord>();
-                foreach (Move move in POTENTIALMOVES) // remove the highlights
-                {
-                    tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
-                }
-                board.setHighlightTag(tilesToHighlight, false);
+                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                tilesWhichHaveChanged.AddRange(theTiles);
 
-                // the tiles involced in the move will have changed (tileFrom and TileTo) ALSO potentially tileJumped
-                tilesToChange.AddRange(tilesToHighlight);
-                tilesToChange.Add(SELECTED.TileCoord);
-                tilesToChange.Add(tileClicked.TileCoord);
+                tilesWhichHaveChanged.Add(SELECTED.TileCoord);
+                tilesWhichHaveChanged.Add(tileClicked.TileCoord);
 
                 // check if a piece was captured
                 if (result.Item1 != null)
                 {
                     Piece captured = result.Item1;
-                    tilesToChange.Add(captured.CurrentPosition); // the tile which was jumped must be updated
+                    tilesWhichHaveChanged.Add(captured.CurrentPosition); // the tile which was jumped must be updated
 
                     CAPTURED[captured.Player] += 1;
                     SELECTED = tileClicked;
-                    // check if the move resulted in a kinging
-                    if (result.Item2)
+
+                    // if move did not result in a king
+                    if (!result.Item2)
                     {
-                        // then the turn has ended so change player etc
-                        PLAYER = (PLAYER == "red") ? "white" : "red";
-                        changeDisplayMessage("Player " + PLAYER + "'s turn");
-                        STAGE = Gamestage.NoClick;
-                    }
-                    // else not kinged so check for further moves to jump
-                    else
-                    {
-                        List<Move> availableMoves = board.getValidAvailableMoves(coord, true);
+                        // then check for further moves
+                        List<Move> availableMoves = board.getValidAvailableMoves(tileClicked.TileCoord, true);
                         if (availableMoves.Count > 0)
                         {
                             POTENTIALMOVES = availableMoves;
                             STAGE = Gamestage.OngoingCapture;
                         }
-                        else
-                        {
-                            PLAYER = (PLAYER == "red") ? "white" : "red";
-                            changeDisplayMessage("Player " + PLAYER + "'s turn");
-                            STAGE = Gamestage.NoClick;
-                        }
                     }
-                    // for each time the CAPTURED value is changed
-                    // update it on the display
-                    //changeScoreMessage(CAPTURED);
+
                     changeCapturedDisplay(CAPTURED);
+                    // if NOT an ongoing capture, then change the player etc
+                    if (! (STAGE == Gamestage.OngoingCapture) )
+                    {
+                        PLAYER = (PLAYER == "red") ? "white" : "red";
+                        changeDisplayMessage("Player " + PLAYER + "'s turn");
+                        STAGE = Gamestage.NoClick;
+                    }
+
                 }
+                // else a piece wasnt captured
                 else
                 {
-                    System.Console.WriteLine("changing turn");
                     PLAYER = (PLAYER == "red") ? "white" : "red";
                     changeDisplayMessage("Player " + PLAYER + "'s turn");
                     STAGE = Gamestage.NoClick;
                 }
 
             }
-            // else the player has clicked on a non highlighted one of their pieces
+
+            // else the player has clicked on a non highlighted one of their own pieces
             else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == PLAYER)
             {
-                System.Console.WriteLine("it thinkks tile is not highlighted AND its occupied by the cur player piece?");
-                ////////////
-                // ALSO THE NW TILE IS CONSIDERED INVALID
-                // SO SOME ISSUE HERE
-                System.Console.WriteLine("{0} {1} {2}", tileClicked.IsHighlighted, tileClicked.IsOccupied, tileClicked.OccupyingPiece.Player);
-                System.Console.WriteLine("potential moves are:");
-                foreach (Move move in POTENTIALMOVES)
-                {
-                    System.Console.WriteLine(move.ToPos.repr());
-                }
-                System.Console.WriteLine("and the tile clicked was {0}", tileClicked.TileCoord.repr());
-
-
-
-
-
-                // this if-else block to make the highlight response nicer
-
-                List<Coord> tilesToHighlight = new List<Coord>();
-                foreach (Move move in POTENTIALMOVES) // remove the highlights
-                {
-                    tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
-                }
 
                 // if previous clicked tile is not same as just clicked tile
                 if (SELECTED.TileCoord != tileClicked.TileCoord)
                 {
-                    // then just update the highlight
-
-
-                    board.setHighlightTag(tilesToHighlight, false);
-                    tilesToChange.AddRange(tilesToHighlight);
+                    // then just remove -> update the highlight (by calling this function again)
+                    List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                    tilesWhichHaveChanged.AddRange(theTiles);
                     STAGE = Gamestage.NoClick;
-                    this.tileClickedHandler(null, coord); // problem could be here
+                    this.tileClickedHandler(null, tileClicked.TileCoord); // problem could be here
                 }
                 else
                 {
                     // just remove the highlight
-                    board.setHighlightTag(tilesToHighlight, false);
-                    tilesToChange.AddRange(tilesToHighlight);
+                    List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                    tilesWhichHaveChanged.AddRange(theTiles);
                     STAGE = Gamestage.NoClick;
                 }
             }
 
-            // sles player has clicked on some invalid tile so remove highlight
-            // CONSIDER REMOVING PREVIOUS ELSE ?
+            // else player has clicked on a non-highlighted, non piece of theirs
             else
             {
-                System.Console.WriteLine("some invalid tile?");
-
-                List<Coord> tilesToHighlight = new List<Coord>();
-                foreach (Move move in POTENTIALMOVES) // remove the highlights
-                {
-                    tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
-                }
-
-                board.setHighlightTag(tilesToHighlight, false);
-                tilesToChange.AddRange(tilesToHighlight);
+                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                tilesWhichHaveChanged.AddRange(theTiles);
                 STAGE = Gamestage.NoClick;
             }
+
+            return tilesWhichHaveChanged;
         }
 
         private void secondClickMadeOfContinuedCapture()
