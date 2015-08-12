@@ -201,10 +201,12 @@ namespace checkers_wf
             {
                 tilesWhichHaveChanged = firstClickMade(tileClicked);
             }
+
             else if (this.STAGE == Gamestage.OneClick)
             {
                 tilesWhichHaveChanged = secondClickMade(tileClicked);
             }
+
             else if (STAGE == Gamestage.OngoingCapture)
             {
                 secondClickMadeOfContinuedCapture();
