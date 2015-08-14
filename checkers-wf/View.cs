@@ -199,17 +199,17 @@ namespace checkers_wf
             // eg if stage was noclicks, then this call to the func represents the first click
             if (this.STAGE == Gamestage.NoClick)
             {
-                tilesWhichHaveChanged = firstClickMade(tileClicked);
+                tilesWhichHaveChanged = processFirstClick(tileClicked);
             }
 
             else if (this.STAGE == Gamestage.OneClick)
             {
-                tilesWhichHaveChanged = secondClickMade(tileClicked);
+                tilesWhichHaveChanged = processSecondClick(tileClicked);
             }
 
             else if (STAGE == Gamestage.OngoingCapture)
             {
-                secondClickMadeOfContinuedCapture();
+                processSecondClickOfContinuedCapture();
             }
 
             // finally do stuff eg send the tiles which have changed to be refreshed by the gui display
@@ -220,7 +220,7 @@ namespace checkers_wf
         }
 
         // done
-        private List<Coord> firstClickMade(Tile tileClicked)
+        private List<Coord> processFirstClick(Tile tileClicked)
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
             // enforce must jump rule if there are pieces with jumps available
@@ -266,7 +266,7 @@ namespace checkers_wf
         
 
 
-        private List<Coord> secondClickMade(Tile tileClicked)
+        private List<Coord> processSecondClick(Tile tileClicked)
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
             // can assume SELECTED holds a tile (with a valid piece on it)
@@ -359,7 +359,7 @@ namespace checkers_wf
             return tilesWhichHaveChanged;
         }
 
-        private void secondClickMadeOfContinuedCapture()
+        private void processSecondClickOfContinuedCapture()
         {
             if (tileClicked == SELECTED)
             {
