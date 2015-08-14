@@ -359,8 +359,9 @@ namespace checkers_wf
             return tilesWhichHaveChanged;
         }
 
-        private void processSecondClickOfContinuedCapture()
+        private List<Coord> processSecondClickOfContinuedCapture()
         {
+            List<Coord> tilesWhichHaveChanged = new List<Coord>();
             if (tileClicked == SELECTED)
             {
                 List<Coord> tilesToHighlight = new List<Coord>();
@@ -370,7 +371,7 @@ namespace checkers_wf
                 }
 
                 board.setHighlightTag(tilesToHighlight, false);
-                tilesToChange.AddRange(tilesToHighlight);
+                tilesWhichHaveChanged.AddRange(tilesToHighlight);
                 SELECTED = tileClicked; // redundant?
                 STAGE = Gamestage.OneClick;
                 // PROBLEM LIKELY HERE
@@ -384,6 +385,7 @@ namespace checkers_wf
             {
                 changeDisplayMessage("Player " + PLAYER + ", continue the capture sequence");
             }
+            return tilesWhichHaveChanged;
         }
 
         private void finaly()
