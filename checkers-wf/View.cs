@@ -216,7 +216,7 @@ namespace checkers_wf
             // tilesWhichHaveChanged goes in here
             finaly();
 
-            // possible to change the vs account to gmail? 
+            // possible to change the vs account to gmail?
 
 
         }
