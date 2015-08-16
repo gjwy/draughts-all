@@ -209,9 +209,9 @@ namespace checkers_wf
 
             else if (STAGE == Gamestage.OngoingCapture)
             {
-                processSecondClickOfContinuedCapture();
+                processSecondClickOfContinuedCapture(); //upto
             }
-
+            // else if Stage==End
             // finally do stuff eg send the tiles which have changed to be refreshed by the gui display
             // tilesWhichHaveChanged goes in here
             finaly();
@@ -296,7 +296,7 @@ namespace checkers_wf
                     CAPTURED[captured.Player] += 1;
                     SELECTED = tileClicked;
 
-                    // if move did not result in a king
+                    // if piece was captured and move did not result in a king
                     if (!result.Item2)
                     {
                         // then check for further moves
@@ -318,7 +318,7 @@ namespace checkers_wf
                     }
 
                 }
-                // else a piece wasnt captured
+                // else a piece wasnt captured (just normal move) so end turn
                 else
                 {
                     PLAYER = (PLAYER == "red") ? "white" : "red";
