@@ -39,6 +39,9 @@ namespace checkers_wf
             if (captured != null)
             {
                 // TODO
+                // DRAW a pile of captured pieces
+                // implement huffing rule / options / change starting player
+                // piece graphics, kinging, highlighting
             }
         }
     }
