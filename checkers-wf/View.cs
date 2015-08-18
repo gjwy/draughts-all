@@ -379,7 +379,7 @@ namespace checkers_wf
                     tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
                 }
 
-                board.setHighlightTag(tilesToHighlight, false);
+                board.setHighlightTag(tilesToHighlight, true);
                 tilesWhichHaveChanged.AddRange(tilesToHighlight);
                 SELECTED = tileClicked; // redundant?
                 STAGE = Gamestage.OngoingCapture_OneClick;
@@ -456,10 +456,27 @@ namespace checkers_wf
                     STAGE = Gamestage.NoClick;
                 }
             }
-            // else the player has clicked on a non highlighted piece
-            // since it is continuedcapture, the continued capture must be enforced
-            //
-            changeDisplayMessage("enforce continued capture");
+            // else the player has clicked on a non highlighted tile
+            // we must enforce capture
+            // 1. player has reclicked on tileA
+            // 2. player has clicked on a non highlighted tile (outside of the enforced capture)
+            else if (tileClicked.TileCoord == SELECTED.TileCoord)
+            {
+                // simply toggle highlight for consistency and back to first click
+                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                tilesWhichHaveChanged.AddRange(theTiles);
+                STAGE = Gamestage.OngoingCapture_NoClick;
+            }
+            else
+            // toggle highlight for consistency and enforce the capture
+            {
+                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                tilesWhichHaveChanged.AddRange(theTiles);
+                STAGE = Gamestage.OngoingCapture_NoClick;
+                changeDisplayMessage("enforce continued capture");
+            }
+            
+            
 
 
 
