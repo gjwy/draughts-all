@@ -219,6 +219,10 @@ namespace checkers_wf
             // else if Stage==End
             // finally do stuff eg send the tiles which have changed to be refreshed by the gui display
             // tilesWhichHaveChanged goes in here
+
+            updateGuiTiles(tilesWhichHaveChanged);
+            changeCapturedDisplay(CAPTURED);
+
             finaly();
 
             // possible to change the vs account to gmail?
@@ -270,8 +274,6 @@ namespace checkers_wf
             return tilesWhichHaveChanged;
 
         }
-        
-
 
         private List<Coord> processSecondClick(Tile tileClicked)
         {
@@ -397,13 +399,70 @@ namespace checkers_wf
 
         private List<Coord> processOngoingCaptureSecondClick(Tile tileClicked)
         {
+            // this function almost identical to processSecondClick
+            // but ENFORCES THE CONTINUED CAPTURE (WHICH IS IDENTIFIED IN THE FIRST CLICK)
             // input:
             //  SELECTED := the posA tile (which has valid moves (represented by list of posB in POTENTIALMOVES))
             //  tileClicked := the posB tile
 
             // assert tileClicked is in Potnential moves, then make the move, then check for kinging / further jumps
+            // if not in potential moves -> error message, firstclickongoingcapture
 
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
+
+            if (tileClicked.IsHighlighted) // easier than searching through potentialmoves
+            {
+                System.Console.WriteLine("is highlighted!");
+                Tuple<Piece, bool> result = board.movePiece(SELECTED, tileClicked, POTENTIALMOVES);
+
+                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                tilesWhichHaveChanged.AddRange(theTiles);
+
+                tilesWhichHaveChanged.Add(SELECTED.TileCoord);
+                tilesWhichHaveChanged.Add(tileClicked.TileCoord);
+
+                if (result.Item1 != null)
+                {
+                    Piece captured = result.Item1;
+                    tilesWhichHaveChanged.Add(captured.CurrentPosition);
+                    CAPTURED[captured.Player] += 1;
+                    SELECTED = tileClicked;
+                    // resulted in a further capture..
+                    // and if did not result in a king
+                    if (!result.Item2)
+                    {
+                        List<Move> availableMoves = board.getValidAvailableMoves(tileClicked.TileCoord, true);
+                        if (availableMoves.Count > 0)
+                        {
+                            POTENTIALMOVES = availableMoves;
+                            STAGE = Gamestage.OngoingCapture_NoClick;
+                        }
+                    }
+
+                    changeCapturedDisplay(CAPTURED);
+                    // if NOT an ongoing capture, then change the player etc
+                    if (!(STAGE == Gamestage.OngoingCapture_NoClick))
+                    {
+                        PLAYER = (PLAYER == "red") ? "white" : "red";
+                        changeDisplayMessage("Player " + PLAYER + "'s turn");
+                        STAGE = Gamestage.NoClick;
+                    }
+                }
+                // else a piece wasnt captured (just normal move) so end turn
+                else
+                {
+                    PLAYER = (PLAYER == "red") ? "white" : "red";
+                    changeDisplayMessage("Player " + PLAYER + "'s turn");
+                    STAGE = Gamestage.NoClick;
+                }
+            }
+            // else the player has clicked on a non highlighted piece
+            // since it is continuedcapture, the continued capture must be enforced
+            //
+            changeDisplayMessage("enforce continued capture");
+
+
+
 
             return tilesWhichHaveChanged;
         }
@@ -439,8 +498,7 @@ namespace checkers_wf
             //renderAllPieces(board); // gui method taking model arg
             //changeScoreMessage(CAPTURED); // gui method taking control arg
 
-            updateGuiTiles(tilesToChange);
-            changeCapturedDisplay(CAPTURED);
+
         }
 
         private List<Coord> setHighlightsForTiles(List<Move> availableMoves, bool highlightBool)
