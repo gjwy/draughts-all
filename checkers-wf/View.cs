@@ -344,8 +344,12 @@ namespace checkers_wf
                 {
                     // then just remove -> update the highlight (by calling this function again)
                     List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
-                    tilesWhichHaveChanged.AddRange(theTiles);
+                    //tilesWhichHaveChanged.AddRange(theTiles);
                     STAGE = Gamestage.NoClick;
+                    // since a recursive call is made here,
+                    // it wont reach the updateGuiTiles normally, 
+                    // so must call it manually here
+                    updateGuiTiles(theTiles);
                     this.tileClickedHandler(null, tileClicked.TileCoord); // problem could be here
                 }
                 else
