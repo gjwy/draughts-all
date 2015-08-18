@@ -23,7 +23,7 @@ namespace checkers_wf
         // flow state stuff
         // CONSIDER MOVING TO BOARD/MODEL?
         private string GAMETYPE;
-        private enum Gamestage { NoClick, OneClick, OngoingCapture_NoClick, OngoingCapture_OneClick, End };
+        private enum Gamestage { NoClick, OneClick, OngoingCapture, End };
         private Gamestage STAGE;
         private Dictionary<string, int> CAPTURED; // score
         private string WINNER;
@@ -207,14 +207,9 @@ namespace checkers_wf
                 tilesWhichHaveChanged = processSecondClick(tileClicked);
             }
 
-            else if (STAGE == Gamestage.OngoingCapture_NoClick)
+            else if (STAGE == Gamestage.OngoingCapture)
             {
-                tilesWhichHaveChanged = processOngoingCaptureFirstClick(tileClicked); //upto
-            }
-
-            else if (STAGE == Gamestage.OngoingCapture_OneClick)
-            {
-                tilesWhichHaveChanged = processOngoingCaptureSecondClick(tileClicked);
+                processSecondClickOfContinuedCapture(); //upto
             }
             // else if Stage==End
             // finally do stuff eg send the tiles which have changed to be refreshed by the gui display
@@ -309,13 +304,13 @@ namespace checkers_wf
                         if (availableMoves.Count > 0)
                         {
                             POTENTIALMOVES = availableMoves;
-                            STAGE = Gamestage.OngoingCapture_NoClick;
+                            STAGE = Gamestage.OngoingCapture;
                         }
                     }
 
                     changeCapturedDisplay(CAPTURED);
                     // if NOT an ongoing capture, then change the player etc
-                    if (! (STAGE == Gamestage.OngoingCapture_NoClick) )
+                    if (! (STAGE == Gamestage.OngoingCapture) )
                     {
                         PLAYER = (PLAYER == "red") ? "white" : "red";
                         changeDisplayMessage("Player " + PLAYER + "'s turn");
@@ -366,7 +361,7 @@ namespace checkers_wf
             return tilesWhichHaveChanged;
         }
 
-        private List<Coord> processOngoingCaptureFirstClick(Tile tileClicked)
+        private List<Coord> processSecondClickOfContinuedCapture()
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
             if (tileClicked == SELECTED)
@@ -380,7 +375,7 @@ namespace checkers_wf
                 board.setHighlightTag(tilesToHighlight, false);
                 tilesWhichHaveChanged.AddRange(tilesToHighlight);
                 SELECTED = tileClicked; // redundant?
-                STAGE = Gamestage.OngoingCapture_OneClick;
+                STAGE = Gamestage.OneClick;
                 // PROBLEM LIKELY HERE
                 // ONECLICK STATE ISNT ENTIRELY CORRECT, SINCE THERE IS A RESTRICTION THAT THE PIECE DOING SUCCESSIVE CAPTURES IN THE
                 // 'SEQUENCE' MUST BE THE SAME PIECE ALL THE WAY THROUGH, EG TILECLICKED MUST BE THE PREV (SELECTED)
@@ -392,19 +387,6 @@ namespace checkers_wf
             {
                 changeDisplayMessage("Player " + PLAYER + ", continue the capture sequence");
             }
-            return tilesWhichHaveChanged;
-        }
-
-        private List<Coord> processOngoingCaptureSecondClick(Tile tileClicked)
-        {
-            // input:
-            //  SELECTED := the posA tile (which has valid moves (represented by list of posB in POTENTIALMOVES))
-            //  tileClicked := the posB tile
-
-            // assert tileClicked is in Potnential moves, then make the move, then check for kinging / further jumps
-
-            List<Coord> tilesWhichHaveChanged = new List<Coord>();
-
             return tilesWhichHaveChanged;
         }
 
