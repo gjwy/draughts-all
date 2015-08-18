@@ -268,7 +268,7 @@ namespace checkers_wf
         
 
 
-        private List<Coord> processSecondClick(Tile tileClicked, bool ongoingCapture=false)
+        private List<Coord> processSecondClick(Tile tileClicked)
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
             // can assume SELECTED holds a tile (with a valid piece on it)
