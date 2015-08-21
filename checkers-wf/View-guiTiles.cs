@@ -111,8 +111,6 @@ namespace checkers_wf
                 }
                 guiTileRefs[row] = listOfPanels;
             }
-            // after drawing the tiles, disable them from user input
-            this.tilePanel.Enabled = false;
         }
 
         /* null the guiTileRefs, clear the tilePanel controls */

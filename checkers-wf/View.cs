@@ -40,6 +40,7 @@ namespace checkers_wf
             InitializeComponent(); //view
             // drawTiles(); // will be moved out of the initialiser <<==
             renderTiles(board);
+            STAGE = Gamestage.None;
 
         }
 
@@ -120,8 +121,6 @@ namespace checkers_wf
 
             // reset the gui (removes the pieces etc from the tiles)
             clearGuiTiles(board);
-            // disable the gui
-            this.tilePanel.Enabled = false;
 
             // reset toolbar elements
             resetToolStripMenuItem.Enabled = false;
@@ -183,7 +182,6 @@ namespace checkers_wf
             PLAYER = startPlayer;
 
             renderAllPieces(board);             // gui method
-            this.tilePanel.Enabled = true; // allows the tiles to be clicked (must be after gui renders)
             changeCapturedDisplay(CAPTURED);
             changeDisplayMessage("Player " + PLAYER + "'s turn");
 
@@ -212,43 +210,53 @@ namespace checkers_wf
         {
             // interpret clicks based on the Stage variable
 
-            List<Coord> tilesWhichHaveChanged = new List<Coord>();
-            Tile tileClicked = board.getTile(coord);
 
-            // eg if existing stage was noclicks, then this call to the func represents the first click
-            if (STAGE == Gamestage.NoClick)
+            if (STAGE == Gamestage.None)
             {
-                tilesWhichHaveChanged = processFirstClick(tileClicked);
+                // do not process any clicks as a game is not initiated
+            }
+            else
+            {
+                List<Coord> tilesWhichHaveChanged = new List<Coord>();
+                Tile tileClicked = board.getTile(coord);
+
+                // eg if existing stage was noclicks, then this call to the func represents the first click
+                if (STAGE == Gamestage.NoClick)
+                {
+                    tilesWhichHaveChanged = processFirstClick(tileClicked);
+                }
+
+                else if (STAGE == Gamestage.OneClick)
+                {
+                    tilesWhichHaveChanged = processSecondClick(tileClicked);
+                }
+
+                else if (STAGE == Gamestage.OngoingCapture_NoClick)
+                {
+                    tilesWhichHaveChanged = processOngoingCaptureFirstClick(tileClicked);
+                }
+
+                else if (STAGE == Gamestage.OngoingCapture_OneClick)
+                {
+                    tilesWhichHaveChanged = processOngoingCaptureSecondClick(tileClicked);
+                }
+
+
+
+                // moves, player changes have already been applied
+                // finally update the display with those tilesWhichHaveChanged or been CAPTURED
+                // check if the game has ended or not
+
+                finalSteps(tilesWhichHaveChanged);
+
+                if (STAGE == Gamestage.End)
+                {
+                    changeDisplayMessage("Player " + WINNER + " wins!");
+                    playAgain();
+                }
             }
 
-            else if (STAGE == Gamestage.OneClick)
-            {
-                tilesWhichHaveChanged = processSecondClick(tileClicked);
-            }
 
-            else if (STAGE == Gamestage.OngoingCapture_NoClick)
-            {
-                tilesWhichHaveChanged = processOngoingCaptureFirstClick(tileClicked);
-            }
-
-            else if (STAGE == Gamestage.OngoingCapture_OneClick)
-            {
-                tilesWhichHaveChanged = processOngoingCaptureSecondClick(tileClicked);
-            }
-
-     
-
-            // moves, player changes have already been applied
-            // finally update the display with those tilesWhichHaveChanged or been CAPTURED
-            // check if the game has ended or not
-
-            finalSteps(tilesWhichHaveChanged);
-
-            if (STAGE == Gamestage.End)
-            {
-                changeDisplayMessage("Player " + WINNER + " wins!");
-                playAgain();
-            }
 
 
         }
