@@ -35,14 +35,12 @@ namespace checkers_wf
                 // get the graphics obj used to paint the panel
                 Graphics graphic = e.Graphics;
                 // create a brush with playerColor colored paint
+                Image test = Resources.texture4;
                 System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(playerColor);
-                
-                System.Drawing.TextureBrush myBrush2 = new System.Drawing.TextureBrush(pieceTexture); // the bounding rectangle of the texture image
-                // scale down the texture from 256,256
-                myBrush2.Transform = new System.Drawing.Drawing2D.Matrix(50.0f / 256.0f, 0.0f, 0.0f, 50.0f / 256.0f, 0.0f, 0.0f);
+                System.Drawing.TextureBrush myBrush2 = new System.Drawing.TextureBrush(test);
                 // draw a filled elipse with the brush
                 // TODO: change this to an image
-                graphic.FillEllipse(myBrush2, new Rectangle(0, 0,this.Height-1, this.Width-1)); // the bounding rectangle of the piecePanel
+                graphic.FillEllipse(myBrush2, new Rectangle(0, 0,this.Height-1, this.Width-1));
                
                 // cleanup the tools
                 myBrush.Dispose();
