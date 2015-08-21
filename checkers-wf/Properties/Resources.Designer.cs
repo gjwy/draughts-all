@@ -63,46 +63,6 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _200_1700_big_0 {
-            get {
-                object obj = ResourceManager.GetObject("_200_1700_big_0", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _384b3b8c_b67e_440c_8804_62e5fbd55510_400 {
-            get {
-                object obj = ResourceManager.GetObject("_384b3b8c_b67e_440c_8804_62e5fbd55510_400", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _42_Wood_Grain_Texture_1 {
-            get {
-                object obj = ResourceManager.GetObject("_42_Wood_Grain_Texture_1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _89b3fc5b24328d075f9f34397ee07aca {
-            get {
-                object obj = ResourceManager.GetObject("_89b3fc5b24328d075f9f34397ee07aca", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap banner {
             get {
                 object obj = ResourceManager.GetObject("banner", resourceCulture);
@@ -113,9 +73,9 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap black_pattern_tile {
+        internal static System.Drawing.Bitmap draughts_king_red {
             get {
-                object obj = ResourceManager.GetObject("black_pattern_tile", resourceCulture);
+                object obj = ResourceManager.GetObject("draughts_king_red", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +83,9 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap checkerboard {
+        internal static System.Drawing.Bitmap draughts_king_white {
             get {
-                object obj = ResourceManager.GetObject("checkerboard", resourceCulture);
+                object obj = ResourceManager.GetObject("draughts_king_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +93,9 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap checkerboard1 {
+        internal static System.Drawing.Bitmap draughts_man_red {
             get {
-                object obj = ResourceManager.GetObject("checkerboard1", resourceCulture);
+                object obj = ResourceManager.GetObject("draughts_man_red", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +103,9 @@ namespace checkers_wf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap checkerboard2 {
+        internal static System.Drawing.Bitmap draughts_man_white {
             get {
-                object obj = ResourceManager.GetObject("checkerboard2", resourceCulture);
+                object obj = ResourceManager.GetObject("draughts_man_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -156,16 +116,6 @@ namespace checkers_wf.Properties {
         internal static System.Drawing.Bitmap fpgJx {
             get {
                 object obj = ResourceManager.GetObject("fpgJx", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap il_570xN_481011284_bkx7 {
-            get {
-                object obj = ResourceManager.GetObject("il_570xN_481011284_bkx7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -205,17 +155,7 @@ namespace checkers_wf.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap wood_plaque {
             get {
-                object obj = ResourceManager.GetObject("wood plaque", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap woodplaque {
-            get {
-                object obj = ResourceManager.GetObject("woodplaque", resourceCulture);
+                object obj = ResourceManager.GetObject("wood_plaque", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

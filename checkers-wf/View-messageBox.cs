@@ -44,5 +44,23 @@ namespace checkers_wf
                 // piece graphics, kinging, highlighting
             }
         }
+
+        private void playAgain()
+        {
+            this.label3.Text = "Would you like to play again?";
+            this.button1.Enabled = true;
+            this.button1.Visible = true;
+            this.button2.Enabled = true;
+            this.button2.Visible = true;
+        }
+
+        private void resetPlayAgain()
+        {
+            this.label3.Text = "";
+            this.button1.Enabled = false;
+            this.button1.Visible = false;
+            this.button2.Enabled = false;
+            this.button2.Visible = false;
+        }
     }
 }

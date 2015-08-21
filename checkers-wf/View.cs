@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using checkers;
@@ -15,15 +9,15 @@ namespace checkers_wf
 {
     public partial class ViewControler : Form
     {
-        
+
 
         //options stuff to be put in options etc
-        private string startPlayer = "";
+        private string startPlayer = "red";
 
         // flow state stuff
         // CONSIDER MOVING TO BOARD/MODEL?
         private string GAMETYPE;
-        private enum Gamestage { NoClick, OneClick, OngoingCapture_NoClick, OngoingCapture_OneClick, End };
+        private enum Gamestage { NoClick, OneClick, OngoingCapture_NoClick, OngoingCapture_OneClick, End, None };
         private Gamestage STAGE;
         private Dictionary<string, int> CAPTURED; // score
         private string WINNER;
@@ -64,7 +58,6 @@ namespace checkers_wf
             // finally quit
             this.Close();
         }
-
 
         private void optionsMenu_Click(object sender, EventArgs e)
         {
@@ -108,19 +101,37 @@ namespace checkers_wf
 
         private void resetMenu_Click(object sender, EventArgs e)
         {
-            
-            // unpopulate the game board:
+            resetProcedure();
+        }
+
+        private void resetProcedure()
+        {
+            // reset the model 
             board.clearGameBoard();
-            renderAllPieces(board); // removes all the guipieces
-            undrawTiles(board); // undraw the tiles
+
+            // reset state variables
+            STAGE = Gamestage.None;
+            SELECTED = null;
+            POTENTIALMOVES = null;
+            GAMETYPE = null;
+            CAPTURED = null;
+            WINNER = null;
+            PLAYER = null;
+
+            // reset the gui (removes the pieces etc from the tiles)
+            clearGuiTiles(board);
+            // disable the gui
+            this.tilePanel.Enabled = false;
+
+            // reset toolbar elements
             resetToolStripMenuItem.Enabled = false;
             newGameToolStripMenuItem.Enabled = true;
-            newGameToolStripMenuItem.ToolTipText = null;
+            newGameToolStripMenuItem.ToolTipText = "Start a new game versus a player or the ai";
 
-
-            //changeScoreMessage(); // when called without args resets
-            changeCapturedDisplay();
+            // reset non guitile display elements
+            changeCapturedDisplay(); // when called with no args, clear the pile
             changeDisplayMessage("(gui) board has been reset");
+            resetPlayAgain();
         }
 
         private void loadGameMenu_Click(object sender, EventArgs e)
@@ -128,16 +139,6 @@ namespace checkers_wf
             // draw the tiles
             // load a game state
             // also contains player state
-        }
-
-        /* player vs player button clicked, setup */
-        private void vsPlayerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // drawTiles()
-            // establish connection (host)
-            // etc
-            // LOCAL VS PLAYER GAME
-            playerVsplayer();
         }
 
 
@@ -148,10 +149,20 @@ namespace checkers_wf
          * could be moved somewhere else, but it requires
          * access to the gui elements as well as model methods */
 
-            // reorganise this between this func and the immediate click handler
+        // reorganise this between this func and the immediate click handler
+        /* player vs player button clicked, setup */
+        private void vsPlayerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // drawTiles()
+            // establish connection (host)
+            // etc
+            // LOCAL VS PLAYER GAME
+            playerVsplayer();
+        }
+
         private void playerVsplayer()
         {
-            startPlayer = "red";
+            
             board.populateGameBoard();       // model method
 
 
@@ -171,18 +182,27 @@ namespace checkers_wf
             STAGE = Gamestage.NoClick;
             PLAYER = startPlayer;
 
-            //renderTiles(board);              // gui method
             renderAllPieces(board);             // gui method
             this.tilePanel.Enabled = true; // allows the tiles to be clicked (must be after gui renders)
-            //changeScoreMessage(CAPTURED);
             changeCapturedDisplay(CAPTURED);
             changeDisplayMessage("Player " + PLAYER + "'s turn");
 
             // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
 
-
-
+        private void playAgainButton_Click(object sender, EventArgs e)
+        {
+            Button b = (Button)sender;
+            if (b.Text == "yes")
+            {
+                resetProcedure();
+                playerVsplayer();
+            }
+            else
+            {
+                resetProcedure();
+            }
+        }
 
 
 
@@ -193,44 +213,46 @@ namespace checkers_wf
             // interpret clicks based on the Stage variable
 
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
-
             Tile tileClicked = board.getTile(coord);
 
-            // eg if stage was noclicks, then this call to the func represents the first click
-            if (this.STAGE == Gamestage.NoClick)
+            // eg if existing stage was noclicks, then this call to the func represents the first click
+            if (STAGE == Gamestage.NoClick)
             {
                 tilesWhichHaveChanged = processFirstClick(tileClicked);
             }
 
-            else if (this.STAGE == Gamestage.OneClick)
+            else if (STAGE == Gamestage.OneClick)
             {
                 tilesWhichHaveChanged = processSecondClick(tileClicked);
             }
 
             else if (STAGE == Gamestage.OngoingCapture_NoClick)
             {
-                tilesWhichHaveChanged = processOngoingCaptureFirstClick(tileClicked); //upto
+                tilesWhichHaveChanged = processOngoingCaptureFirstClick(tileClicked);
             }
 
             else if (STAGE == Gamestage.OngoingCapture_OneClick)
             {
                 tilesWhichHaveChanged = processOngoingCaptureSecondClick(tileClicked);
             }
-            // else if Stage==End
-            // finally do stuff eg send the tiles which have changed to be refreshed by the gui display
-            // tilesWhichHaveChanged goes in here
 
-            updateGuiTiles(tilesWhichHaveChanged);
-            changeCapturedDisplay(CAPTURED);
+     
 
-            finaly();
+            // moves, player changes have already been applied
+            // finally update the display with those tilesWhichHaveChanged or been CAPTURED
+            // check if the game has ended or not
 
-            // possible to change the vs account to gmail?
+            finalSteps(tilesWhichHaveChanged);
+
+            if (STAGE == Gamestage.End)
+            {
+                changeDisplayMessage("Player " + WINNER + " wins!");
+                playAgain();
+            }
 
 
         }
-
-        // done
+        
         private List<Coord> processFirstClick(Tile tileClicked)
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
@@ -349,6 +371,9 @@ namespace checkers_wf
                     // since a recursive call is made here,
                     // it wont reach the updateGuiTiles normally, 
                     // so must call it manually here
+
+                    // this recursive call is needed, since in this situation when a user clicks off an already highlighted option
+                    // onto another option, it simply removes the initial highlight and reapplies the new highlight
                     updateGuiTiles(theTiles);
                     this.tileClickedHandler(null, tileClicked.TileCoord); // problem could be here
                 }
@@ -488,8 +513,11 @@ namespace checkers_wf
             return tilesWhichHaveChanged;
         }
 
-        private void finaly()
+        private void finalSteps(List<Coord> tilesWhichHaveChanged)
         {
+
+            updateGuiTiles(tilesWhichHaveChanged);
+            changeCapturedDisplay(CAPTURED);
             // at the end of the processing of the input, check that there
             // are tiles containing pieces with moves for the next player's turn
             // not restricted to onlyJumps
@@ -503,21 +531,6 @@ namespace checkers_wf
                 WINNER = (PLAYER == "red") ? "white" : "red";
             }
 
-            // check that game has ended
-            if (STAGE == Gamestage.End)
-            {
-                // display winner / scores
-                // no valid moves for ~PLAYER, 
-                changeDisplayMessage("Player " + WINNER + " wins!");
-
-                // TODO: cleanup game and prog to be ready for next game
-
-            }
-
-            // at very end of this function (changes have been made to model)
-            // so update the gui with the changes
-            //renderAllPieces(board); // gui method taking model arg
-            //changeScoreMessage(CAPTURED); // gui method taking control arg
 
 
         }
@@ -532,6 +545,7 @@ namespace checkers_wf
             board.setHighlightTag(tilesToHighlight, highlightBool);
             return tilesToHighlight;
         }
+
 
     }
 }

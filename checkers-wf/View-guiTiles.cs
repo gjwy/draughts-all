@@ -125,6 +125,7 @@ namespace checkers_wf
         // go through the model board, find those with gui needs to be
         // updated set to true, and use the refs array to obtain the gui tile
         // finally set the model back to guineedsupdate=false
+        // used only for initially adding the pieces
         private void renderAllPieces(Board modelBoard)
         {
             // use gui=true tiles from modelBoard.internalBoard
@@ -142,33 +143,71 @@ namespace checkers_wf
                 for (int col = 0; col < size; col ++)
                 {
                     Tile tile = rowOfTiles[col];
+                   
+                    try
+                    {
+                        System.Windows.Forms.Panel guiTile = guiTileRefs[row][col];
+                        
+
+                            
+                        if (tile.IsOccupied)
+                        {
+                            string player = tile.OccupyingPiece.Player;
+                            CirclePanel guiPiece = new CirclePanel(player);
+
+                            guiPiece.BackColor = Color.Transparent; // this set in the current main thread for visual priority
+                            guiPiece.Size = new System.Drawing.Size(20, 20);
+                            guiPiece.Location = new System.Drawing.Point(10, 10);
+                            guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
+                            guiPiece.Name = "guiPiece"; //
+                            guiTile.Controls.Add(guiPiece);
+                        }
+                        else // remove the corresponding gui piece
+                            // since this means guineedsupdating=true, and there are NO pieces on the logic tile
+                        {
+                            // so remove the guiPiece which should currently be on PiecePanel
+                            guiTile.Controls.Clear();
+                        }
+                    // finally mark the tile as gui=false, this is LOGIC CODE
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        System.Console.Error.WriteLine("resetting board before its created");
+                        // it is better practise to not have this type of error handled here
+                        // it is better to have the option to click reset disabled while the
+                        // board has not been created yet
+                    }
+
+                    
+                }
+            }
+        }
+
+        // clears all tiles
+        private void clearGuiTiles(Board modelBoard)
+        {
+            // use gui=true tiles from modelBoard.internalBoard
+            // find the corresponding panels in guiTileRefs
+            // ADD OR REMOVE THE CONTAINING PIECE ACCORDINGLY
+            // mark the modelBoard tiles as gui=false
+
+
+
+            int size = modelBoard.Size;
+
+            for (int row = 0; row < size; row++)
+            {
+                Tile[] rowOfTiles = modelBoard.InternalBoard[row];
+                for (int col = 0; col < size; col++)
+                {
+                    Tile tile = rowOfTiles[col];
                     if (tile.GuiMustBeUpdated)
                     {
                         try
                         {
                             System.Windows.Forms.Panel guiTile = guiTileRefs[row][col];
-                        
-
-                            
-                            if (tile.IsOccupied)
-                            {
-                                string player = tile.OccupyingPiece.Player;
-                                CirclePanel guiPiece = new CirclePanel(player);
-
-                                guiPiece.BackColor = Color.Transparent; // this set in the current main thread for visual priority
-                                guiPiece.Size = new System.Drawing.Size(20, 20);
-                                guiPiece.Location = new System.Drawing.Point(10, 10);
-                                guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
-                                guiPiece.Name = "guiPiece"; //
-                                guiTile.Controls.Add(guiPiece);
-                            }
-                            else // remove the corresponding gui piece
-                                // since this means guineedsupdating=true, and there are NO pieces on the logic tile
-                            {
-                                // so remove the guiPiece which should currently be on PiecePanel
-                                guiTile.Controls.Clear();
-                            }
-                        // finally mark the tile as gui=false, this is LOGIC CODE
+                            guiTile.Controls.Clear();
+                            // finally mark the tile as gui=false, this is LOGIC CODE
                         }
                         catch (NullReferenceException e)
                         {
@@ -182,6 +221,7 @@ namespace checkers_wf
                 }
             }
         }
+
 
         /* A general function to replace the repeated calls to the render pieces function at the end of every turn.
          * Takes a list of coords of tiles which are required to be updated on the display, rather than checking every one 

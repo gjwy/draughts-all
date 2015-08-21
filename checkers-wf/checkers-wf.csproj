@@ -11,6 +11,22 @@
     <AssemblyName>checkers-wf</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Gareth\Desktop\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +46,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>FBCF33EF41EB5E24C9D92CC3416D501D0C860E6C</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>checkers-wf_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -87,6 +115,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="checkers-wf_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -109,12 +138,6 @@
     <None Include="Resources\fpgJx.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\backround.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\42-Wood-Grain-Texture-1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\banner.png" />
   </ItemGroup>
   <ItemGroup>
@@ -124,34 +147,40 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\woodplaque.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\wood plaque.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\texture4.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\il_570xN.481011284_bkx7.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\200-1700_big_0.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\384b3b8c-b67e-440c-8804-62e5fbd55510_400.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Indian-Premium-Black-Slab-464x464.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\black_pattern_tile.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\89b3fc5b24328d075f9f34397ee07aca.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\off-white-micro-fiber-cloth-fabric-texture-190x190.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draughts_king_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draughts_king_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draughts_man_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\draughts_man_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
