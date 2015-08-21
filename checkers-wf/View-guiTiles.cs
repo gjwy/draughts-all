@@ -255,13 +255,15 @@ namespace checkers_wf
                 // piece (add a piece panel to the tile)
                 if (modelTile.IsOccupied)
                 {
+                    // info about type of piece shgould also be passed to the constructor here (king,)
                     string player = modelTile.OccupyingPiece.Player;
-                    CirclePanel guiPiece = new CirclePanel(player);
+                    string ptype = modelTile.OccupyingPiece.Ptype; //
+                    CirclePanel guiPiece = new CirclePanel(player); // ptype
                     guiPiece.BackColor = Color.Transparent;
                     guiPiece.Size = new System.Drawing.Size(20, 20);
                     guiPiece.Location = new System.Drawing.Point(10, 10);
                     guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, modelTile.TileCoord); };
-                    guiPiece.Name = "guiPiece"; // 
+                    guiPiece.Name = "guiPiece";
                     guiTile.Controls.Add(guiPiece);
                 }
                 if (!modelTile.IsOccupied)
