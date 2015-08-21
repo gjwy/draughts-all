@@ -24,24 +24,28 @@ namespace checkers_wf
             this.playerColor = Color.FromName(playerColor);
             // will need to add a method to change the texture to the king when it is upgraded
             this.pieceTexture = (playerColor == "red") ? Resources.draughts_man_red : Resources.draughts_man_white;
-            
+
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            
+
             {
-                
+
                 // get the graphics obj used to paint the panel
                 Graphics graphic = e.Graphics;
                 // create a brush with playerColor colored paint
-                Image test = Resources.texture4;
                 System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(playerColor);
-                System.Drawing.TextureBrush myBrush2 = new System.Drawing.TextureBrush(test);
+                // the image is bound to 150*150 size starting from 60,60 top left origin
+                System.Drawing.TextureBrush myBrush2 = new System.Drawing.TextureBrush(pieceTexture, new Rectangle(60, 60, 150, 150)); // the bounding rectangle of the texture image
+                
+                myBrush2.WrapMode = System.Drawing.Drawing2D.WrapMode.Clamp;
+                // scale down the texture from 256,256
+                myBrush2.Transform = new System.Drawing.Drawing2D.Matrix(35.0f / 256.0f, 0.0f, 0.0f, 35.0f / 256.0f, 0.0f, 0.0f);
                 // draw a filled elipse with the brush
                 // TODO: change this to an image
-                graphic.FillEllipse(myBrush2, new Rectangle(0, 0,this.Height-1, this.Width-1));
-               
+                graphic.FillEllipse(myBrush2, new Rectangle(0, 0, this.Height - 1, this.Width - 1)); // the bounding rectangle of the piecePanel
+
                 // cleanup the tools
                 myBrush.Dispose();
                 myBrush2.Dispose();
@@ -50,7 +54,7 @@ namespace checkers_wf
         }
 
 
-        
+
 
     }
 }
