@@ -154,7 +154,7 @@ namespace checkers_wf
                             CirclePanel guiPiece = new CirclePanel(player);
 
                             guiPiece.BackColor = Color.Transparent; // this set in the current main thread for visual priority
-                            guiPiece.Size = new System.Drawing.Size(25, 25);
+                            guiPiece.Size = new System.Drawing.Size(20, 20);
                             guiPiece.Location = new System.Drawing.Point(10, 10);
                             guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, tile.TileCoord); };
                             guiPiece.Name = "guiPiece"; //
@@ -258,8 +258,8 @@ namespace checkers_wf
                     string player = modelTile.OccupyingPiece.Player;
                     CirclePanel guiPiece = new CirclePanel(player);
                     guiPiece.BackColor = Color.Transparent;
-                    guiPiece.Size = new System.Drawing.Size(25, 25);
-                    guiPiece.Location = new System.Drawing.Point(7, 7);
+                    guiPiece.Size = new System.Drawing.Size(20, 20);
+                    guiPiece.Location = new System.Drawing.Point(10, 10);
                     guiPiece.Click += (sender, eventArgs) => { tileClickedHandler(sender, modelTile.TileCoord); };
                     guiPiece.Name = "guiPiece"; // 
                     guiTile.Controls.Add(guiPiece);
