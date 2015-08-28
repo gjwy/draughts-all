@@ -21,6 +21,13 @@ namespace checkers_wf
         private Gamestage STAGE;
         private Dictionary<string, int> CAPTURED; // score
         private string WINNER;
+        //private NetMod NW;
+        private Dictionary<string, string> options = new Dictionary<string, string>()
+        {
+            {"Remote Port", "8888" },
+            {"Remote Ip", "000.000.000.000" }
+        };
+
 
         // turn variables
         private string PLAYER; // the current player
@@ -32,7 +39,11 @@ namespace checkers_wf
 
         public ViewControler(Board board)
         {
+
+
+
             // prevent flickering double buffering
+
             this.DoubleBuffered = true;
 
             this.board = board; //model
@@ -62,7 +73,7 @@ namespace checkers_wf
 
         private void optionsMenu_Click(object sender, EventArgs e)
         {
-            OptionForm optionForm = new OptionForm();
+            OptionForm optionForm = new OptionForm(options); // <-- options obj
             optionForm.ShowDialog();
         }
 
@@ -73,31 +84,38 @@ namespace checkers_wf
 
         private void vsCompToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            playerVsPlayerNW();
 
-            
-            // ASSERT BOARDSTATE==PREGAME
+        }
+
+        private void playerVsPlayerNW()
+        {
+
+            board.populateGameBoard();       // model method
 
 
-            //drawTest();
-            renderTiles(board); // to implement in View-guiTiles.cs
-            // requires the board object to get the colors decided for the tiles in the model
-            // this is done in the control::
-            board.populateGameBoard();
-            // now the populated tiles (containing a piece) 
-            // have been marked as guimustbeupdated
 
-            // wait for a small delay then update the gui accordingly
-            //System.Threading.Thread.Sleep(1000);
-            renderAllPieces(board);
-            // offload to logic
-
-            // enable the clicking of the resetMenu_Click item
             resetToolStripMenuItem.Enabled = true;
             newGameToolStripMenuItem.Enabled = false;
             newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
-            // give some success message to the display
-            //changeDisplayMessage("(gui) board has been populated");
 
+
+
+            GAMETYPE = "vsPlayerNW";
+            CAPTURED = new Dictionary<string, int>();
+            CAPTURED.Add("white", 0);
+            CAPTURED.Add("red", 0);
+            WINNER = "";
+           // NW = new NetMod(); // <-- options obj
+
+            STAGE = Gamestage.NoClick;
+            PLAYER = startPlayer; // < -- options obj
+
+            renderAllPieces(board);             // gui method
+            changeCapturedDisplay(CAPTURED);
+            changeDisplayMessage("Player " + PLAYER + "'s turn");
+
+            // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
 
         private void resetMenu_Click(object sender, EventArgs e)
@@ -247,13 +265,23 @@ namespace checkers_wf
                 // finally update the display with those tilesWhichHaveChanged or been CAPTURED
                 // check if the game has ended or not
 
-                finalSteps(tilesWhichHaveChanged);
+                finalSteps(tilesWhichHaveChanged); // for the end of this clicks processing
 
-                if (STAGE == Gamestage.End)
-                {
-                    changeDisplayMessage("Player " + WINNER + " wins!");
-                    playAgain();
-                }
+                
+
+                // IF the end of this click processing has resulted in the end of the paylers turn:
+                //if (GAMETYPE == "vsPlayerNW") // and currentplayer not thisplayer
+                //{
+                    //NW.send(board.InternalBoard);
+                    //List<Move> moves = NW.getResult(); //ensure this is based on the previous sent // make these calls wait
+                    //foreach(Move m in moves)
+                    //{
+                        //apply, updateGui, wait
+                        // tileswhichhavechanged
+                    //}
+                    // currentPlayer = thisplayer, STATE
+                    //finalSteps();//twhc
+                //}
             }
 
 
@@ -538,6 +566,15 @@ namespace checkers_wf
                 // winner = changePlayer
                 WINNER = (PLAYER == "red") ? "white" : "red";
             }
+
+            if (STAGE == Gamestage.End)
+            {
+                changeDisplayMessage("Player " + WINNER + " wins!");
+                playAgain();
+            }
+            // also move changeplayer into this finalsteps
+
+
 
 
 
