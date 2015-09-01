@@ -13,8 +13,7 @@ namespace checkers_wf
     {
 
 
-        //options stuff to be put in options etc
-        private string startPlayer = "red";
+        
 
         // flow state stuff
         // CONSIDER MOVING TO BOARD/MODEL?
@@ -28,7 +27,8 @@ namespace checkers_wf
         private Dictionary<string, string> options = new Dictionary<string, string>()
         {
             {"Remote Port", "8888" },
-            {"Remote Ip", "000.000.000.000" }
+            {"Remote Ip", "000.000.000.000" },
+            {"Start Player", "red" }
         };
 
 
@@ -105,12 +105,14 @@ namespace checkers_wf
             // LOCAL VS PLAYER GAME
             newGame();
             GAMETYPE = "vsPlayer";
+            CURRENT_PLAYER = options["Start Player"];
             STAGE = Gamestage.NoClick;
         }
 
         // versus multiplayer (host)
         private void hostMultiplayer_Click(object sender, EventArgs e)
         {
+            CURRENT_PLAYER = options["Start Player"];
             GAMETYPE = "host";
             STAGE = Gamestage.NoClick; // only set once whos turn is determined
             // reference to current player which it polls
@@ -170,7 +172,7 @@ namespace checkers_wf
             WINNER = "";
 
 
-            CURRENT_PLAYER = startPlayer;
+            
 
             renderAllPieces(board);             // gui method
             changeCapturedDisplay(CAPTURED);
