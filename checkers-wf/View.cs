@@ -77,47 +77,15 @@ namespace checkers_wf
             optionForm.ShowDialog();
         }
 
-        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void vsCompToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            playerVsPlayerNW();
-
-        }
-
-        private void playerVsPlayerNW()
-        {
-
-            board.populateGameBoard();       // model method
-
-
-
-            resetToolStripMenuItem.Enabled = true;
-            newGameToolStripMenuItem.Enabled = false;
-            newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
-
-
-
+            newGame();
             GAMETYPE = "vsPlayerNW";
-            CAPTURED = new Dictionary<string, int>();
-            CAPTURED.Add("white", 0);
-            CAPTURED.Add("red", 0);
-            WINNER = "";
-           // NW = new NetMod(); // <-- options obj
-
             STAGE = Gamestage.NoClick;
-            PLAYER = startPlayer; // < -- options obj
 
-            renderAllPieces(board);             // gui method
-            changeCapturedDisplay(CAPTURED);
-            changeDisplayMessage("Player " + PLAYER + "'s turn");
-
-            // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
 
+        
         private void resetMenu_Click(object sender, EventArgs e)
         {
             resetProcedure();
@@ -174,10 +142,12 @@ namespace checkers_wf
             // establish connection (host)
             // etc
             // LOCAL VS PLAYER GAME
-            playerVsplayer();
+            newGame();
+            GAMETYPE = "vsPlayer";
+            STAGE = Gamestage.NoClick;
         }
 
-        private void playerVsplayer()
+        private void newGame()
         {
             
             board.populateGameBoard();       // model method
@@ -190,13 +160,13 @@ namespace checkers_wf
 
             
             
-            GAMETYPE = "vsPlayer";
+            
             CAPTURED = new Dictionary<string, int>();
             CAPTURED.Add("white", 0);
             CAPTURED.Add("red", 0);
             WINNER = "";
 
-            STAGE = Gamestage.NoClick;
+            
             PLAYER = startPlayer;
 
             renderAllPieces(board);             // gui method
@@ -212,7 +182,7 @@ namespace checkers_wf
             if (b.Text == "yes")
             {
                 resetProcedure();
-                playerVsplayer();
+                newGame();
             }
             else
             {
