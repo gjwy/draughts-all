@@ -39,31 +39,29 @@ namespace checkers_wf
 
         public ViewControler(Board board)
         {
-
-
-
-            // prevent flickering double buffering
-
             this.DoubleBuffered = true;
-
             this.board = board; //model
-
             InitializeComponent(); //view
-            // drawTiles(); // will be moved out of the initialiser <<==
             renderTiles(board);
             STAGE = Gamestage.None;
-
         }
 
-       
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        /****************** Menu Item Handlers *********************/
+
+        private void options_Click(object sender, EventArgs e)
+        {
+            OptionForm optionForm = new OptionForm(options); // <-- options obj
+            optionForm.ShowDialog();
+        }
+
+        private void about_Click(object sender, EventArgs e)
         {
             AboutForm aboutForm = new AboutForm();
             aboutForm.ShowDialog();
         }
 
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void quit_Click(object sender, EventArgs e)
         {
             // cleanup stuff
             // eg save open gme option
@@ -71,24 +69,105 @@ namespace checkers_wf
             this.Close();
         }
 
-        private void optionsMenu_Click(object sender, EventArgs e)
+        private void reset_Click(object sender, EventArgs e)
         {
-            OptionForm optionForm = new OptionForm(options); // <-- options obj
-            optionForm.ShowDialog();
+            resetProcedure();
         }
 
-        private void vsCompToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadGame_Click(object sender, EventArgs e)
+        {
+            // TODO
+            // draw the tiles
+            // load a game state
+            // also contains player state
+        }
+
+        private void saveGame_Click(object sender, EventArgs e)
+        {
+            // TODO:
+        }
+
+        // versus computer Player
+        private void vsComputer_Click(object sender, EventArgs e)
+        {
+            // TODO
+        }
+
+        // versus local Player
+        private void vsLocalPlayer_Click(object sender, EventArgs e)
+        {
+            // drawTiles()
+            // establish connection (host)
+            // etc
+            // LOCAL VS PLAYER GAME
+            newGame();
+            GAMETYPE = "vsPlayer";
+            STAGE = Gamestage.NoClick;
+        }
+
+        // versus multiplayer (host)
+        private void hostMultiplayer_Click(object sender, EventArgs e)
         {
             newGame();
             GAMETYPE = "vsPlayerNW";
             STAGE = Gamestage.NoClick;
-
         }
 
-        
-        private void resetMenu_Click(object sender, EventArgs e)
+        // versus multiplayer (join)
+        private void joinMultiplayer_Click(object sender, EventArgs e)
         {
-            resetProcedure();
+            newGame();
+            GAMETYPE = "vsPlayerNW";
+            STAGE = Gamestage.NoClick;
+        }
+
+
+        /****************** Situational Handlers *********************/
+
+        private void playAgainButton_Click(object sender, EventArgs e)
+        {
+            Button b = (Button)sender;
+            if (b.Text == "yes")
+            {
+                resetProcedure();
+                newGame();
+            }
+            else
+            {
+                resetProcedure();
+            }
+        }
+
+
+        /****************** Code used by handlers *********************/
+
+        private void newGame()
+        {
+
+            board.populateGameBoard();       // model method
+
+
+
+            resetToolStripMenuItem.Enabled = true;
+            newGameToolStripMenuItem.Enabled = false;
+            newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
+
+
+
+
+            CAPTURED = new Dictionary<string, int>();
+            CAPTURED.Add("white", 0);
+            CAPTURED.Add("red", 0);
+            WINNER = "";
+
+
+            PLAYER = startPlayer;
+
+            renderAllPieces(board);             // gui method
+            changeCapturedDisplay(CAPTURED);
+            changeDisplayMessage("Player " + PLAYER + "'s turn");
+
+            // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
 
         private void resetProcedure()
@@ -119,80 +198,8 @@ namespace checkers_wf
             resetPlayAgain();
         }
 
-        private void loadGameMenu_Click(object sender, EventArgs e)
-        {
-            // draw the tiles
-            // load a game state
-            // also contains player state
-        }
 
-
-
-
-        // ##################################################################
-        /* player vs player game flow set appropriate state
-         * could be moved somewhere else, but it requires
-         * access to the gui elements as well as model methods */
-
-        // reorganise this between this func and the immediate click handler
-        /* player vs player button clicked, setup */
-        private void vsPlayerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // drawTiles()
-            // establish connection (host)
-            // etc
-            // LOCAL VS PLAYER GAME
-            newGame();
-            GAMETYPE = "vsPlayer";
-            STAGE = Gamestage.NoClick;
-        }
-
-        private void newGame()
-        {
-            
-            board.populateGameBoard();       // model method
-
-
-            
-            resetToolStripMenuItem.Enabled = true;
-            newGameToolStripMenuItem.Enabled = false;
-            newGameToolStripMenuItem.ToolTipText = "A game is currently in progress";
-
-            
-            
-            
-            CAPTURED = new Dictionary<string, int>();
-            CAPTURED.Add("white", 0);
-            CAPTURED.Add("red", 0);
-            WINNER = "";
-
-            
-            PLAYER = startPlayer;
-
-            renderAllPieces(board);             // gui method
-            changeCapturedDisplay(CAPTURED);
-            changeDisplayMessage("Player " + PLAYER + "'s turn");
-
-            // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
-        }
-
-        private void playAgainButton_Click(object sender, EventArgs e)
-        {
-            Button b = (Button)sender;
-            if (b.Text == "yes")
-            {
-                resetProcedure();
-                newGame();
-            }
-            else
-            {
-                resetProcedure();
-            }
-        }
-
-
-
-
+        /****************** Game Handler and code *********************/
 
         private void tileClickedHandler(object sender, Coord coord)
         {
@@ -237,20 +244,20 @@ namespace checkers_wf
 
                 finalSteps(tilesWhichHaveChanged); // for the end of this clicks processing
 
-                
+
 
                 // IF the end of this click processing has resulted in the end of the paylers turn:
                 //if (GAMETYPE == "vsPlayerNW") // and currentplayer not thisplayer
                 //{
-                    //NW.send(board.InternalBoard);
-                    //List<Move> moves = NW.getResult(); //ensure this is based on the previous sent // make these calls wait
-                    //foreach(Move m in moves)
-                    //{
-                        //apply, updateGui, wait
-                        // tileswhichhavechanged
-                    //}
-                    // currentPlayer = thisplayer, STATE
-                    //finalSteps();//twhc
+                //NW.send(board.InternalBoard);
+                //List<Move> moves = NW.getResult(); //ensure this is based on the previous sent // make these calls wait
+                //foreach(Move m in moves)
+                //{
+                //apply, updateGui, wait
+                // tileswhichhavechanged
+                //}
+                // currentPlayer = thisplayer, STATE
+                //finalSteps();//twhc
                 //}
             }
 
@@ -258,7 +265,7 @@ namespace checkers_wf
 
 
         }
-        
+
         private List<Coord> processFirstClick(Tile tileClicked)
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
@@ -519,6 +526,10 @@ namespace checkers_wf
             return tilesWhichHaveChanged;
         }
 
+        /* Calls the updateGui method with only the board tiles which have changed,
+           updates the captured/score display : TODO pile of tiles ...
+           checks if a move exists for the next player and if not declares the winner
+           provides a palyAgain prompt if game ends */
         private void finalSteps(List<Coord> tilesWhichHaveChanged)
         {
 
@@ -550,6 +561,9 @@ namespace checkers_wf
 
         }
 
+        /* Helper function, given a list of moves, sets the toTile to the given highlight value
+           then returns all of those tiles which have been set, ready to be sent to the guiUpdate 
+           procedure ~ could be moved out of this file really*/
         private List<Coord> setHighlightsForTiles(List<Move> availableMoves, bool highlightBool)
         {
             List<Coord> tilesToHighlight = new List<Coord>();
