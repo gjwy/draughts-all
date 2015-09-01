@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Threading;
 
 using checkers;
-/* THIS IS REALLY THE CONTROL FLOW, HANDLERS FOR GUI USER INPUT AND CREATES
-NEW GAEMS ETC */
+using network;
+
+
 namespace checkers_wf
 {
     public partial class ViewControler : Form
@@ -21,7 +23,8 @@ namespace checkers_wf
         private Gamestage STAGE;
         private Dictionary<string, int> CAPTURED; // score
         private string WINNER;
-        //private NetMod NW;
+        private NetworkInterface nw;
+        private Thread nwThread;
         private Dictionary<string, string> options = new Dictionary<string, string>()
         {
             {"Remote Port", "8888" },
@@ -30,7 +33,7 @@ namespace checkers_wf
 
 
         // turn variables
-        private string PLAYER; // the current player
+        private string CURRENT_PLAYER; // the current player
         private Tile SELECTED;
         private List<Move> POTENTIALMOVES;
 
@@ -108,16 +111,22 @@ namespace checkers_wf
         // versus multiplayer (host)
         private void hostMultiplayer_Click(object sender, EventArgs e)
         {
+            GAMETYPE = "host";
+            STAGE = Gamestage.NoClick; // only set once whos turn is determined
+            // reference to current player which it polls
+            nw = new NetworkInterface(options, CURRENT_PLAYER);
+            nwThread = new Thread(nw.hostGame);
+            // starts the local game
+            // STAGE determines flow
             newGame();
-            GAMETYPE = "vsPlayerNW";
-            STAGE = Gamestage.NoClick;
+
         }
 
         // versus multiplayer (join)
         private void joinMultiplayer_Click(object sender, EventArgs e)
         {
             newGame();
-            GAMETYPE = "vsPlayerNW";
+            GAMETYPE = "join";
             STAGE = Gamestage.NoClick;
         }
 
@@ -161,11 +170,11 @@ namespace checkers_wf
             WINNER = "";
 
 
-            PLAYER = startPlayer;
+            CURRENT_PLAYER = startPlayer;
 
             renderAllPieces(board);             // gui method
             changeCapturedDisplay(CAPTURED);
-            changeDisplayMessage("Player " + PLAYER + "'s turn");
+            changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
 
             // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
@@ -182,7 +191,7 @@ namespace checkers_wf
             GAMETYPE = null;
             CAPTURED = null;
             WINNER = null;
-            PLAYER = null;
+            CURRENT_PLAYER = null;
 
             // reset the gui (removes the pieces etc from the tiles)
             clearGuiTiles(board);
@@ -270,7 +279,7 @@ namespace checkers_wf
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
             // enforce must jump rule if there are pieces with jumps available
-            List<Tile> tilesContainingPlayerPiecesWithJumps = board.getTilesContainingPlayerPiecesWithValidMoves(PLAYER, true);
+            List<Tile> tilesContainingPlayerPiecesWithJumps = board.getTilesContainingPlayerPiecesWithValidMoves(CURRENT_PLAYER, true);
 
             if (tilesContainingPlayerPiecesWithJumps.Count > 0
                 && !tilesContainingPlayerPiecesWithJumps.Contains(tileClicked))
@@ -278,7 +287,7 @@ namespace checkers_wf
                 changeDisplayMessage("You must capture a piece if possible");
             }
 
-            else if (tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == this.PLAYER)
+            else if (tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == this.CURRENT_PLAYER)
             {
                 // prioritise jumps
                 List<Move> availableMoves = board.getValidAvailableMoves(tileClicked.TileCoord, true);
@@ -354,8 +363,8 @@ namespace checkers_wf
                     // if NOT an ongoing capture, then change the player etc
                     if (! (STAGE == Gamestage.OngoingCapture_NoClick) )
                     {
-                        PLAYER = (PLAYER == "red") ? "white" : "red";
-                        changeDisplayMessage("Player " + PLAYER + "'s turn");
+                        CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
+                        changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
                         STAGE = Gamestage.NoClick;
                     }
 
@@ -363,15 +372,15 @@ namespace checkers_wf
                 // else a piece wasnt captured (just normal move) so end turn
                 else
                 {
-                    PLAYER = (PLAYER == "red") ? "white" : "red";
-                    changeDisplayMessage("Player " + PLAYER + "'s turn");
+                    CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
+                    changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
                     STAGE = Gamestage.NoClick;
                 }
 
             }
 
             // else the player has clicked on a non highlighted one of their own pieces
-            else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == PLAYER)
+            else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == CURRENT_PLAYER)
             {
 
                 // if previous clicked tile is not same as just clicked tile
@@ -434,7 +443,7 @@ namespace checkers_wf
             }
             else
             {
-                changeDisplayMessage("Player " + PLAYER + ", continue the capture sequence");
+                changeDisplayMessage("Player " + CURRENT_PLAYER + ", continue the capture sequence");
             }
             return tilesWhichHaveChanged;
         }
@@ -485,16 +494,16 @@ namespace checkers_wf
                     // if NOT an ongoing capture, then change the player etc
                     if (!(STAGE == Gamestage.OngoingCapture_NoClick))
                     {
-                        PLAYER = (PLAYER == "red") ? "white" : "red";
-                        changeDisplayMessage("Player " + PLAYER + "'s turn");
+                        CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
+                        changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
                         STAGE = Gamestage.NoClick;
                     }
                 }
                 // else a piece wasnt captured (just normal move) so end turn
                 else
                 {
-                    PLAYER = (PLAYER == "red") ? "white" : "red";
-                    changeDisplayMessage("Player " + PLAYER + "'s turn");
+                    CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
+                    changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
                     STAGE = Gamestage.NoClick;
                 }
             }
@@ -540,12 +549,12 @@ namespace checkers_wf
             // not restricted to onlyJumps
             // PLAYER is already set to this next player (during the function)
             // this is the win condition
-            List<Tile> tilesContainingPlayerPiecesWithMoves = board.getTilesContainingPlayerPiecesWithValidMoves(PLAYER, false);
+            List<Tile> tilesContainingPlayerPiecesWithMoves = board.getTilesContainingPlayerPiecesWithValidMoves(CURRENT_PLAYER, false);
             if (tilesContainingPlayerPiecesWithMoves.Count == 0)
             {
                 STAGE = Gamestage.End;
                 // winner = changePlayer
-                WINNER = (PLAYER == "red") ? "white" : "red";
+                WINNER = (CURRENT_PLAYER == "red") ? "white" : "red";
             }
 
             if (STAGE == Gamestage.End)

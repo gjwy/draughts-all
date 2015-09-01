@@ -36,35 +36,35 @@
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label1
+            // label_ip
             // 
             this.label_ip.AutoSize = true;
             this.label_ip.Location = new System.Drawing.Point(46, 50);
-            this.label_ip.Name = "label1";
+            this.label_ip.Name = "label_ip";
             this.label_ip.Size = new System.Drawing.Size(35, 13);
             this.label_ip.TabIndex = 0;
             this.label_ip.Text = "label1";
             // 
-            // label2
+            // label_port
             // 
             this.label_port.AutoSize = true;
             this.label_port.Location = new System.Drawing.Point(46, 77);
-            this.label_port.Name = "label2";
+            this.label_port.Name = "label_port";
             this.label_port.Size = new System.Drawing.Size(35, 13);
             this.label_port.TabIndex = 1;
             this.label_port.Text = "label2";
             // 
-            // textBox1
+            // textbox_ip
             // 
             this.textbox_ip.Location = new System.Drawing.Point(118, 50);
-            this.textbox_ip.Name = "textBox1";
+            this.textbox_ip.Name = "textbox_ip";
             this.textbox_ip.Size = new System.Drawing.Size(100, 20);
             this.textbox_ip.TabIndex = 2;
             // 
-            // textBox2
+            // textbox_port
             // 
             this.textbox_port.Location = new System.Drawing.Point(118, 77);
-            this.textbox_port.Name = "textBox2";
+            this.textbox_port.Name = "textbox_port";
             this.textbox_port.Size = new System.Drawing.Size(100, 20);
             this.textbox_port.TabIndex = 3;
             // 
@@ -101,7 +101,7 @@
             this.Controls.Add(this.label_port);
             this.Controls.Add(this.label_ip);
             this.Name = "OptionForm";
-            this.Text = "OptionForm";
+            this.Text = "Options";
             this.ResumeLayout(false);
             this.PerformLayout();
 

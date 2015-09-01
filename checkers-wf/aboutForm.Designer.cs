@@ -72,7 +72,7 @@
             this.Controls.Add(this.aboutCloseButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "AboutForm";
-            this.Text = "aboutForm";
+            this.Text = "About";
             this.Load += new System.EventHandler(this.aboutForm_Load);
             this.ResumeLayout(false);
 

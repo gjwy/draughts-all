@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checkers", "checkers\checkers.csproj", "{81EF8ABC-63DD-441F-874A-47F80547A73B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checkers-wf", "checkers-wf\checkers-wf.csproj", "{0FE24411-AF66-450F-B56D-504FFD7B4CBA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5946B3E-CFA2-405C-96DA-39361757A127} = {C5946B3E-CFA2-405C-96DA-39361757A127}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "network", "network\network.csproj", "{C5946B3E-CFA2-405C-96DA-39361757A127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{0FE24411-AF66-450F-B56D-504FFD7B4CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FE24411-AF66-450F-B56D-504FFD7B4CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FE24411-AF66-450F-B56D-504FFD7B4CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5946B3E-CFA2-405C-96DA-39361757A127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5946B3E-CFA2-405C-96DA-39361757A127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5946B3E-CFA2-405C-96DA-39361757A127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5946B3E-CFA2-405C-96DA-39361757A127}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
