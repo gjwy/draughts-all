@@ -33,7 +33,6 @@ namespace network
             }
             // player is the CURRENT_PLAYER / HOST player
             this.current_player = current_player;
-            this.local_ip = IPAddress.Parse("121.72.249.130"); // issue
         }
 
         /* if hosting, determine currentplayer (startplayer) */
@@ -68,6 +67,10 @@ namespace network
         {
             Socket listenerS = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Socket acceptS;
+
+            local_ip = getLocalIp();
+            System.Console.WriteLine("ip is ", local_ip.ToString());
+
             // create endpoint
             IPEndPoint ep = new IPEndPoint(local_ip, local_port);
 
@@ -110,6 +113,21 @@ namespace network
 
             System.Console.WriteLine("nw- accepted connection");
         }
+
+        /* http://stackoverflow.com/questions/6803073/get-local-ip-address */
+        private IPAddress getLocalIp()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return IPAddress.Parse(ip.ToString());
+                }
+            }
+            throw new Exception("IP not found");
+        }
+
 
 
     }
