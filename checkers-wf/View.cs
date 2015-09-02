@@ -26,7 +26,7 @@ namespace checkers_wf
         private Thread nwThread;
         private Dictionary<string, string> options = new Dictionary<string, string>()
         {
-            {"Remote Port", "8888" },
+            {"Remote Port", "1727" },
             {"Remote Ip", "000.000.000.000" },
             {"Start Player", "red" }
         };
@@ -114,10 +114,14 @@ namespace checkers_wf
         {
             CURRENT_PLAYER = options["Start Player"];
             GAMETYPE = "host";
-            STAGE = Gamestage.NoClick; // only set once whos turn is determined
             // reference to current player which it polls
             nw = new NetworkInterface(options, CURRENT_PLAYER);
             nwThread = new Thread(nw.hostGame);
+            nwThread.Start();
+            System.Console.WriteLine("call the connect method");
+
+            STAGE = Gamestage.NoClick; // only set once whos turn is determined
+
             // starts the local game
             // STAGE determines flow
             newGame();

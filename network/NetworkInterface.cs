@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Net;
 
 namespace network
 {
@@ -16,7 +17,8 @@ namespace network
 
         int local_port;
         int remote_port;
-        string remote_ip;
+        IPAddress local_ip;
+        IPAddress remote_ip;
 
         public NetworkInterface(Dictionary<string, string> options, string current_player)
         {
@@ -31,6 +33,7 @@ namespace network
             }
             // player is the CURRENT_PLAYER / HOST player
             this.current_player = current_player;
+            this.local_ip = IPAddress.Parse("121.72.249.130"); // issue
         }
 
         /* if hosting, determine currentplayer (startplayer) */
@@ -40,7 +43,7 @@ namespace network
             // if hosting set local player to currentplayer
             local_player = current_player;
             remote_player = (local_player == "red") ? "white" : "red";
-
+            System.Console.WriteLine("nw- call the connect method");
             connect();
             // wait for a connect
             // while ()
@@ -60,10 +63,52 @@ namespace network
             // send own move back
         }
 
+        /* host the connection */
         public void connect()
         {
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            // https://msdn.microsoft.com/en-us/library/system.net.sockets.socket.listen(v=vs.110).aspx
+            Socket listenerS = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket acceptS;
+            // create endpoint
+            IPEndPoint ep = new IPEndPoint(local_ip, local_port);
+
+            // attach to socket
+            try
+            {
+                listenerS.Bind(ep);
+            }
+            catch (SocketException e)
+            {
+                System.Console.WriteLine(e.GetBaseException());
+                System.Console.WriteLine(e.ErrorCode);
+            }
+            
+
+
+            // listen
+            System.Console.WriteLine("nw- listening");
+            try
+            {
+                listenerS.Listen(1);
+            }
+            catch (SocketException e)
+            {
+                System.Console.WriteLine(e.GetBaseException());
+                System.Console.WriteLine(e.ErrorCode);
+            }
+
+
+            // accept a connection
+            try
+            {
+                acceptS = listenerS.Accept();
+            }
+            catch (SocketException e)
+            {
+                System.Console.WriteLine(e.GetBaseException());
+                System.Console.WriteLine(e.ErrorCode);
+            }
+
+            System.Console.WriteLine("nw- accepted connection");
         }
 
 
