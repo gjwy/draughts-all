@@ -131,9 +131,14 @@ namespace checkers_wf
         // versus multiplayer (join)
         private void joinMultiplayer_Click(object sender, EventArgs e)
         {
-            newGame();
             GAMETYPE = "join";
+            nw = new NetworkInterface(options, "blue");
+            nwThread = new Thread(nw.joinGame);
+            nwThread.Start();
             STAGE = Gamestage.NoClick;
+            newGame();
+            
+            
         }
 
 

@@ -49,8 +49,8 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(262, 160);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Checkers\r\nVersion 1.1 - gui\r\nGareth Wilson 2015\r\n\r\nTodo: finish gui, create logic" +
-    ", add gui and model to \r\nlogic.";
+            this.label1.Text = "Checkers\r\nVersion 1.1 - gui\r\nGareth Wilson 2015\r\n\r\nTodo: finish gui, logging, sav" +
+    "egame, resizeable, network, ai";
             // 
             // panel1
             // 

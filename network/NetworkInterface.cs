@@ -26,6 +26,8 @@ namespace network
             try
             {
                 local_port = Int32.Parse(options["Remote Port"]);
+                remote_port = Int32.Parse(options["Remote Port"]);
+                remote_ip = IPAddress.Parse(options["Remote Ip"]);
             }
             catch (FormatException)
             {
@@ -43,7 +45,14 @@ namespace network
             local_player = current_player;
             remote_player = (local_player == "red") ? "white" : "red";
             System.Console.WriteLine("nw- call the connect method");
-            connect();
+            Socket acceptS = host();
+
+            string message = "Hello client!";
+            byte[] data = Encoding.ASCII.GetBytes(message);
+            acceptS.Send(data);
+
+            System.Console.WriteLine("Sent a message: '{0}'", message);
+            // loop etc
             // wait for a connect
             // while ()
             // on connect, tell the client their assigned player (not thisplayer)
@@ -56,6 +65,19 @@ namespace network
         // THREADED METHOD
         public void joinGame()
         {
+
+
+            Socket joinS = join();
+            byte[] recvBuff = new byte[256];
+            int size = joinS.Receive(recvBuff);
+            string message = Encoding.UTF8.GetString(recvBuff);
+
+            System.Console.WriteLine("Received a message: '{0}'", message);
+
+
+
+            
+
             // wait to connect
             // receive assigned player, receive currentplayer/move
             // apply move, chage state to allow own move
@@ -63,13 +85,13 @@ namespace network
         }
 
         /* host the connection */
-        public void connect()
+        public Socket host()
         {
             Socket listenerS = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Socket acceptS;
+            Socket acceptS = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             local_ip = getLocalIp();
-            System.Console.WriteLine("ip is ", local_ip.ToString());
+            System.Console.WriteLine("ip is " + local_ip.ToString());
 
             // create endpoint
             IPEndPoint ep = new IPEndPoint(local_ip, local_port);
@@ -101,6 +123,7 @@ namespace network
 
 
             // accept a connection
+            
             try
             {
                 acceptS = listenerS.Accept();
@@ -112,6 +135,17 @@ namespace network
             }
 
             System.Console.WriteLine("nw- accepted connection");
+            return acceptS;
+
+
+        }
+
+        private Socket join()
+        {
+            Socket joinS = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ep = new IPEndPoint(remote_ip, remote_port);
+            joinS.Connect(ep);
+            return joinS;
         }
 
         /* http://stackoverflow.com/questions/6803073/get-local-ip-address */
