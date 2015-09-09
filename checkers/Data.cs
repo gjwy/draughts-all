@@ -52,7 +52,7 @@ namespace checkers
             }
             set
             {
-                this.Gametype = value;
+                this.gametype = value;
             }
         }
 

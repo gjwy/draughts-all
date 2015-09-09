@@ -11,6 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checkers-wf", "checkers-wf\
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "network", "network\network.csproj", "{C5946B3E-CFA2-405C-96DA-39361757A127}"
+	ProjectSection(ProjectDependencies) = postProject
+		{81EF8ABC-63DD-441F-874A-47F80547A73B} = {81EF8ABC-63DD-441F-874A-47F80547A73B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

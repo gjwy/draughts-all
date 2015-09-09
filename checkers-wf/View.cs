@@ -97,18 +97,15 @@ namespace checkers_wf
         // versus multiplayer (host)
         private void hostMultiplayer_Click(object sender, EventArgs e)
         {
-            //d.Current_player = d.Options["Start Player"];
-            //d.Gametype = "host";
-            //// reference to current player which it polls
-            //nw = new NetworkInterface(d.Options, d.Current_player);
-            //nwThread = new Thread(nw.hostGame);
-            //nwThread.Start();
-            //System.Console.WriteLine("call the connect method");
+            d.Current_player = d.Options["Start Player"];
+            d.Gametype = "host";
+            nw = new NetworkInterface(d);
+
+            nwThread = new Thread(nw.host);
+            nwThread.Start();
 
             //d.Stage = Data.Gamestage.NoClick; // only set once whos turn is determined
 
-            //// starts the local game
-            //// STAGE determines flow
             //newGame();
 
         }

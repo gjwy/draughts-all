@@ -6,60 +6,73 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 
+using checkers; // for Data
+
 namespace network
 {
     public class NetworkInterface
     {
-        string current_player; // ref which is polled
+        private int local_port;
+        private int remote_port;
+        private IPAddress local_ip;
+        private IPAddress remote_ip;
 
-        string local_player;
-        string remote_player;
+        private string local_player;
+        private string remote_player;
 
-        int local_port;
-        int remote_port;
-        IPAddress local_ip;
-        IPAddress remote_ip;
+        private TcpListener connectionListener; // offloads a connection 
+        // to the gameClient
 
-        public NetworkInterface(Dictionary<string, string> options, string current_player)
+        private TcpClient gameClient;
+        private NetworkStream iostream;
+
+        public NetworkInterface(Data d)
         {
       
             try
             {
-                local_port = Int32.Parse(options["Remote Port"]);
-                remote_port = Int32.Parse(options["Remote Port"]);
-                remote_ip = IPAddress.Parse(options["Remote Ip"]);
+                local_port = remote_port = Int32.Parse(d.Options["Remote Port"]);
+                remote_ip = IPAddress.Parse(d.Options["Remote Ip"]);
             }
             catch (FormatException)
             {
                 System.Console.WriteLine("local port not valid setting");
             }
-            // player is the CURRENT_PLAYER / HOST player
-            this.current_player = current_player;
+
+            // only required for connecting
+            local_ip = getLocalIp();
         }
 
         /* if hosting, determine currentplayer (startplayer) */
         // THREADED METHOD
-        public void hostGame()
+        public void host()
         {
-            // if hosting set local player to currentplayer
-            local_player = current_player;
-            remote_player = (local_player == "red") ? "white" : "red";
-            System.Console.WriteLine("nw- call the connect method");
-            // hosts and connects a connection to the acceptS socket
-            Socket acceptS = host();
-
-            while (current_player == "red")
+      
+            IPEndPoint ep = new IPEndPoint(local_ip, local_port);
+            connectionListener = new TcpListener(ep);
+            connectionListener.Start();
+            while (true)
             {
-                // repeatedly send stuff over this socket
-                
-                System.Console.WriteLine(current_player + local_player + " should variable be cahnung");
-                string message = "Hello client!" + new Random().Next();
-                byte[] data = Encoding.ASCII.GetBytes(message);
-                acceptS.Send(data);
-
-                System.Console.WriteLine("Sent a message: '{0}'", message);
+                System.Console.WriteLine("wait for connection");
+                gameClient = connectionListener.AcceptTcpClient();
+                // connected
             }
-            acceptS.Close();
+            System.Console.WriteLine("connected");
+            iostream = gameClient.GetStream();
+            
+
+            //while (current_player == "red")
+            //{
+            //    // repeatedly send stuff over this socket
+                
+            //    System.Console.WriteLine(current_player + local_player + " should variable be cahnung");
+            //    string message = "Hello client!" + new Random().Next();
+            //    byte[] data = Encoding.ASCII.GetBytes(message);
+            //    acceptS.Send(data);
+
+            //    System.Console.WriteLine("Sent a message: '{0}'", message);
+            //}
+            //acceptS.Close();
 
 
             // loop etc
@@ -85,7 +98,7 @@ namespace network
                 // if ready to be sent,
                 //{
                 // send
-                System.Console.WriteLine(current_player + " of join");
+               
                 //}
 
                 // clear recvbuff;
@@ -113,61 +126,7 @@ namespace network
             // send own move back
         }
 
-        /* host the connection */
-        public Socket host()
-        {
-            Socket listenerS = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Socket acceptS = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            local_ip = getLocalIp();
-            System.Console.WriteLine("ip is " + local_ip.ToString());
-
-            // create endpoint
-            IPEndPoint ep = new IPEndPoint(local_ip, local_port);
-
-            // attach to socket
-            try
-            {
-                listenerS.Bind(ep);
-            }
-            catch (SocketException e)
-            {
-                System.Console.WriteLine(e.GetBaseException());
-                System.Console.WriteLine(e.ErrorCode);
-            }
-            
-
-
-            // listen
-            System.Console.WriteLine("nw- listening");
-            try
-            {
-                listenerS.Listen(1);
-            }
-            catch (SocketException e)
-            {
-                System.Console.WriteLine(e.GetBaseException());
-                System.Console.WriteLine(e.ErrorCode);
-            }
-
-
-            // accept a connection
-            
-            try
-            {
-                acceptS = listenerS.Accept();
-            }
-            catch (SocketException e)
-            {
-                System.Console.WriteLine(e.GetBaseException());
-                System.Console.WriteLine(e.ErrorCode);
-            }
-
-            System.Console.WriteLine("nw- accepted connection");
-            return acceptS;
-
-
-        }
 
         private Socket join()
         {
