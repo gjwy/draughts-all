@@ -47,11 +47,17 @@ namespace network
             System.Console.WriteLine("nw- call the connect method");
             Socket acceptS = host();
 
-            string message = "Hello client!";
-            byte[] data = Encoding.ASCII.GetBytes(message);
-            acceptS.Send(data);
+            while (true)
+            {
+                System.Console.WriteLine(current_player + local_player + " should variable be cahnung");
+                string message = "Hello client!" + new Random().Next();
+                byte[] data = Encoding.ASCII.GetBytes(message);
+                acceptS.Send(data);
 
-            System.Console.WriteLine("Sent a message: '{0}'", message);
+                System.Console.WriteLine("Sent a message: '{0}'", message);
+            }
+
+
             // loop etc
             // wait for a connect
             // while ()
@@ -69,10 +75,29 @@ namespace network
 
             Socket joinS = join();
             byte[] recvBuff = new byte[256];
-            int size = joinS.Receive(recvBuff);
-            string message = Encoding.UTF8.GetString(recvBuff);
 
-            System.Console.WriteLine("Received a message: '{0}'", message);
+            while (true)
+            {
+                // if ready to be sent,
+                //{
+                // send
+                System.Console.WriteLine(current_player + " of join");
+                //}
+
+                // clear recvbuff;
+                recvBuff = new byte[256];
+                int size = joinS.Receive(recvBuff);
+                // if ready to receive,
+                //{
+                string message = Encoding.UTF8.GetString(recvBuff);
+                System.Console.WriteLine("Received a message: '{0}'", message);
+                // clear recvbuff
+                //}
+
+            }
+            
+
+            
 
 
 
