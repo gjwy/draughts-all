@@ -12,41 +12,26 @@ namespace checkers_wf
     public partial class ViewControler : Form
     {
 
-
+        // internal model
+        private Board board;
+        // contains game status data
+        public Data d;
         
-
-        // flow state stuff
-        // CONSIDER MOVING TO BOARD/MODEL?
-        private string GAMETYPE;
-        private enum Gamestage { NoClick, OneClick, OngoingCapture_NoClick, OngoingCapture_OneClick, End, None };
-        private Gamestage STAGE;
-        private Dictionary<string, int> CAPTURED; // score
-        private string WINNER;
         private NetworkInterface nw;
         private Thread nwThread;
-        private Dictionary<string, string> options = new Dictionary<string, string>()
-        {
-            {"Remote Port", "1727" },
-            {"Remote Ip", "000.000.000.000" },
-            {"Start Player", "red" }
-        };
 
 
-        // turn variables
-        private string CURRENT_PLAYER; // the current player
-        private Tile SELECTED;
-        private List<Move> POTENTIALMOVES;
 
 
-        private Board board;
+        
 
         public ViewControler(Board board)
         {
             this.DoubleBuffered = true;
+            this.d = new Data();
             this.board = board; //model
             InitializeComponent(); //view
             renderTiles(board);
-            STAGE = Gamestage.None;
         }
 
 
@@ -54,7 +39,7 @@ namespace checkers_wf
 
         private void options_Click(object sender, EventArgs e)
         {
-            OptionForm optionForm = new OptionForm(options); // <-- options obj
+            OptionForm optionForm = new OptionForm(d.Options); // <-- options obj
             optionForm.ShowDialog();
         }
 
@@ -104,39 +89,39 @@ namespace checkers_wf
             // etc
             // LOCAL VS PLAYER GAME
             newGame();
-            GAMETYPE = "vsPlayer";
-            CURRENT_PLAYER = options["Start Player"];
-            STAGE = Gamestage.NoClick;
+            d.Gametype = "vsPlayer";
+            d.Current_player = d.Options["Start Player"];
+            d.Stage = Data.Gamestage.NoClick;
         }
 
         // versus multiplayer (host)
         private void hostMultiplayer_Click(object sender, EventArgs e)
         {
-            CURRENT_PLAYER = options["Start Player"];
-            GAMETYPE = "host";
-            // reference to current player which it polls
-            nw = new NetworkInterface(options, CURRENT_PLAYER);
-            nwThread = new Thread(nw.hostGame);
-            nwThread.Start();
-            System.Console.WriteLine("call the connect method");
+            //d.Current_player = d.Options["Start Player"];
+            //d.Gametype = "host";
+            //// reference to current player which it polls
+            //nw = new NetworkInterface(d.Options, d.Current_player);
+            //nwThread = new Thread(nw.hostGame);
+            //nwThread.Start();
+            //System.Console.WriteLine("call the connect method");
 
-            STAGE = Gamestage.NoClick; // only set once whos turn is determined
+            //d.Stage = Data.Gamestage.NoClick; // only set once whos turn is determined
 
-            // starts the local game
-            // STAGE determines flow
-            newGame();
+            //// starts the local game
+            //// STAGE determines flow
+            //newGame();
 
         }
 
         // versus multiplayer (join)
         private void joinMultiplayer_Click(object sender, EventArgs e)
         {
-            GAMETYPE = "join";
-            nw = new NetworkInterface(options, "blue");
-            nwThread = new Thread(nw.joinGame);
-            nwThread.Start();
-            STAGE = Gamestage.NoClick;
-            newGame();
+            //d.Gametype = "join";
+            //nw = new NetworkInterface(d.Options, "blue");
+            //nwThread = new Thread(nw.joinGame);
+            //nwThread.Start();
+            //d.Stage = Data.Gamestage.NoClick;
+            //newGame();
             
             
         }
@@ -175,17 +160,17 @@ namespace checkers_wf
 
 
 
-            CAPTURED = new Dictionary<string, int>();
-            CAPTURED.Add("white", 0);
-            CAPTURED.Add("red", 0);
-            WINNER = "";
+            d.Captured = new Dictionary<string, int>();
+            d.Captured.Add("white", 0);
+            d.Captured.Add("red", 0);
+            d.Winner = "";
 
 
             
 
             renderAllPieces(board);             // gui method
-            changeCapturedDisplay(CAPTURED);
-            changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
+            changeCapturedDisplay(d.Captured);
+            changeDisplayMessage("Player " + d.Current_player + "'s turn");
 
             // expect next event to be a player click, dont need to check for valid since its first turn and valid is garunteed
         }
@@ -196,13 +181,13 @@ namespace checkers_wf
             board.clearGameBoard();
 
             // reset state variables
-            STAGE = Gamestage.None;
-            SELECTED = null;
-            POTENTIALMOVES = null;
-            GAMETYPE = null;
-            CAPTURED = null;
-            WINNER = null;
-            CURRENT_PLAYER = null;
+            d.Stage = Data.Gamestage.None;
+            d.Selected = null;
+            d.Potentialmoves = null;
+            d.Gametype = null;
+            d.Captured = null;
+            d.Winner = null;
+            d.Current_player = null;
 
             // reset the gui (removes the pieces etc from the tiles)
             clearGuiTiles(board);
@@ -226,7 +211,7 @@ namespace checkers_wf
             // interpret clicks based on the Stage variable
 
 
-            if (STAGE == Gamestage.None)
+            if (d.Stage == Data.Gamestage.None)
             {
                 // do not process any clicks as a game is not initiated
             }
@@ -236,22 +221,22 @@ namespace checkers_wf
                 Tile tileClicked = board.getTile(coord);
 
                 // eg if existing stage was noclicks, then this call to the func represents the first click
-                if (STAGE == Gamestage.NoClick)
+                if (d.Stage == Data.Gamestage.NoClick)
                 {
                     tilesWhichHaveChanged = processFirstClick(tileClicked);
                 }
 
-                else if (STAGE == Gamestage.OneClick)
+                else if (d.Stage == Data.Gamestage.OneClick)
                 {
                     tilesWhichHaveChanged = processSecondClick(tileClicked);
                 }
 
-                else if (STAGE == Gamestage.OngoingCapture_NoClick)
+                else if (d.Stage == Data.Gamestage.OngoingCapture_NoClick)
                 {
                     tilesWhichHaveChanged = processOngoingCaptureFirstClick(tileClicked);
                 }
 
-                else if (STAGE == Gamestage.OngoingCapture_OneClick)
+                else if (d.Stage == Data.Gamestage.OngoingCapture_OneClick)
                 {
                     tilesWhichHaveChanged = processOngoingCaptureSecondClick(tileClicked);
                 }
@@ -290,7 +275,7 @@ namespace checkers_wf
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
             // enforce must jump rule if there are pieces with jumps available
-            List<Tile> tilesContainingPlayerPiecesWithJumps = board.getTilesContainingPlayerPiecesWithValidMoves(CURRENT_PLAYER, true);
+            List<Tile> tilesContainingPlayerPiecesWithJumps = board.getTilesContainingPlayerPiecesWithValidMoves(d.Current_player, true);
 
             if (tilesContainingPlayerPiecesWithJumps.Count > 0
                 && !tilesContainingPlayerPiecesWithJumps.Contains(tileClicked))
@@ -298,7 +283,7 @@ namespace checkers_wf
                 changeDisplayMessage("You must capture a piece if possible");
             }
 
-            else if (tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == this.CURRENT_PLAYER)
+            else if (tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == d.Current_player)
             {
                 // prioritise jumps
                 List<Move> availableMoves = board.getValidAvailableMoves(tileClicked.TileCoord, true);
@@ -316,9 +301,9 @@ namespace checkers_wf
 
                 // the model has been changed, and a record is kept of which corresponding tiles must be chaged in the gui
                 // update the state
-                SELECTED = tileClicked;
-                POTENTIALMOVES = availableMoves;
-                STAGE = Gamestage.OneClick;
+                d.Selected = tileClicked;
+                d.Potentialmoves = availableMoves;
+                d.Stage = Data.Gamestage.OneClick;
             }
 
             else
@@ -341,12 +326,12 @@ namespace checkers_wf
             if (tileClicked.IsHighlighted)
             {
                 System.Console.WriteLine("is highlighted!");
-                Tuple<Piece, bool> result = board.movePiece(SELECTED, tileClicked, POTENTIALMOVES);
+                Tuple<Piece, bool> result = board.movePiece(d.Selected, tileClicked, d.Potentialmoves);
 
-                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                List<Coord> theTiles = setHighlightsForTiles(d.Potentialmoves, false);
                 tilesWhichHaveChanged.AddRange(theTiles);
 
-                tilesWhichHaveChanged.Add(SELECTED.TileCoord);
+                tilesWhichHaveChanged.Add(d.Selected.TileCoord);
                 tilesWhichHaveChanged.Add(tileClicked.TileCoord);
 
                 // check if a piece was captured
@@ -355,8 +340,8 @@ namespace checkers_wf
                     Piece captured = result.Item1;
                     tilesWhichHaveChanged.Add(captured.CurrentPosition); // the tile which was jumped must be updated
 
-                    CAPTURED[captured.Player] += 1;
-                    SELECTED = tileClicked;
+                    d.Captured[captured.Player] += 1;
+                    d.Selected = tileClicked;
 
                     // if piece was captured and move did not result in a king
                     if (!result.Item2)
@@ -365,42 +350,42 @@ namespace checkers_wf
                         List<Move> availableMoves = board.getValidAvailableMoves(tileClicked.TileCoord, true);
                         if (availableMoves.Count > 0)
                         {
-                            POTENTIALMOVES = availableMoves;
-                            STAGE = Gamestage.OngoingCapture_NoClick;
+                            d.Potentialmoves = availableMoves;
+                            d.Stage = Data.Gamestage.OngoingCapture_NoClick;
                         }
                     }
 
-                    changeCapturedDisplay(CAPTURED);
+                    changeCapturedDisplay(d.Captured);
                     // if NOT an ongoing capture, then change the player etc
-                    if (! (STAGE == Gamestage.OngoingCapture_NoClick) )
+                    if (! (d.Stage == Data.Gamestage.OngoingCapture_NoClick) )
                     {
-                        CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
-                        changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
-                        STAGE = Gamestage.NoClick;
+                        d.Current_player = (d.Current_player == "red") ? "white" : "red";
+                        changeDisplayMessage("Player " + d.Current_player + "'s turn");
+                        d.Stage = Data.Gamestage.NoClick;
                     }
 
                 }
                 // else a piece wasnt captured (just normal move) so end turn
                 else
                 {
-                    CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
-                    changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
-                    STAGE = Gamestage.NoClick;
+                    d.Current_player = (d.Current_player == "red") ? "white" : "red";
+                    changeDisplayMessage("Player " + d.Current_player + "'s turn");
+                    d.Stage = Data.Gamestage.NoClick;
                 }
 
             }
 
             // else the player has clicked on a non highlighted one of their own pieces
-            else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == CURRENT_PLAYER)
+            else if ((!tileClicked.IsHighlighted) && tileClicked.IsOccupied && tileClicked.OccupyingPiece.Player == d.Current_player)
             {
 
                 // if previous clicked tile is not same as just clicked tile
-                if (SELECTED.TileCoord != tileClicked.TileCoord)
+                if (d.Selected.TileCoord != tileClicked.TileCoord)
                 {
                     // then just remove -> update the highlight (by calling this function again)
-                    List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                    List<Coord> theTiles = setHighlightsForTiles(d.Potentialmoves, false);
                     //tilesWhichHaveChanged.AddRange(theTiles);
-                    STAGE = Gamestage.NoClick;
+                    d.Stage = Data.Gamestage.NoClick;
                     // since a recursive call is made here,
                     // it wont reach the updateGuiTiles normally, 
                     // so must call it manually here
@@ -413,18 +398,18 @@ namespace checkers_wf
                 else
                 {
                     // just remove the highlight
-                    List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                    List<Coord> theTiles = setHighlightsForTiles(d.Potentialmoves, false);
                     tilesWhichHaveChanged.AddRange(theTiles);
-                    STAGE = Gamestage.NoClick;
+                    d.Stage = Data.Gamestage.NoClick;
                 }
             }
 
             // else player has clicked on a non-highlighted, non piece of theirs
             else
             {
-                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                List<Coord> theTiles = setHighlightsForTiles(d.Potentialmoves, false);
                 tilesWhichHaveChanged.AddRange(theTiles);
-                STAGE = Gamestage.NoClick;
+                d.Stage = Data.Gamestage.NoClick;
             }
 
             return tilesWhichHaveChanged;
@@ -433,18 +418,18 @@ namespace checkers_wf
         private List<Coord> processOngoingCaptureFirstClick(Tile tileClicked)
         {
             List<Coord> tilesWhichHaveChanged = new List<Coord>();
-            if (tileClicked == SELECTED)
+            if (tileClicked == d.Selected)
             {
                 List<Coord> tilesToHighlight = new List<Coord>();
-                foreach (Move move in POTENTIALMOVES) // remove the highlights
+                foreach (Move move in d.Potentialmoves) // remove the highlights
                 {
                     tilesToHighlight.Add(move.ToPos); // add those whows highlight value WILL be changed..
                 }
 
                 board.setHighlightTag(tilesToHighlight, true);
                 tilesWhichHaveChanged.AddRange(tilesToHighlight);
-                SELECTED = tileClicked; // redundant?
-                STAGE = Gamestage.OngoingCapture_OneClick;
+                d.Selected = tileClicked; // redundant?
+                d.Stage = Data.Gamestage.OngoingCapture_OneClick;
                 // PROBLEM LIKELY HERE
                 // ONECLICK STATE ISNT ENTIRELY CORRECT, SINCE THERE IS A RESTRICTION THAT THE PIECE DOING SUCCESSIVE CAPTURES IN THE
                 // 'SEQUENCE' MUST BE THE SAME PIECE ALL THE WAY THROUGH, EG TILECLICKED MUST BE THE PREV (SELECTED)
@@ -454,7 +439,7 @@ namespace checkers_wf
             }
             else
             {
-                changeDisplayMessage("Player " + CURRENT_PLAYER + ", continue the capture sequence");
+                changeDisplayMessage("Player " + d.Current_player + ", continue the capture sequence");
             }
             return tilesWhichHaveChanged;
         }
@@ -475,20 +460,20 @@ namespace checkers_wf
             if (tileClicked.IsHighlighted) // easier than searching through potentialmoves
             {
                 System.Console.WriteLine("is highlighted!");
-                Tuple<Piece, bool> result = board.movePiece(SELECTED, tileClicked, POTENTIALMOVES);
+                Tuple<Piece, bool> result = board.movePiece(d.Selected, tileClicked, d.Potentialmoves);
 
-                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                List<Coord> theTiles = setHighlightsForTiles(d.Potentialmoves, false);
                 tilesWhichHaveChanged.AddRange(theTiles);
 
-                tilesWhichHaveChanged.Add(SELECTED.TileCoord);
+                tilesWhichHaveChanged.Add(d.Selected.TileCoord);
                 tilesWhichHaveChanged.Add(tileClicked.TileCoord);
 
                 if (result.Item1 != null)
                 {
                     Piece captured = result.Item1;
                     tilesWhichHaveChanged.Add(captured.CurrentPosition);
-                    CAPTURED[captured.Player] += 1;
-                    SELECTED = tileClicked;
+                    d.Captured[captured.Player] += 1;
+                    d.Selected = tileClicked;
                     // resulted in a further capture..
                     // and if did not result in a king
                     if (!result.Item2)
@@ -496,45 +481,45 @@ namespace checkers_wf
                         List<Move> availableMoves = board.getValidAvailableMoves(tileClicked.TileCoord, true);
                         if (availableMoves.Count > 0)
                         {
-                            POTENTIALMOVES = availableMoves;
-                            STAGE = Gamestage.OngoingCapture_NoClick;
+                            d.Potentialmoves = availableMoves;
+                            d.Stage = Data.Gamestage.OngoingCapture_NoClick;
                         }
                     }
 
-                    changeCapturedDisplay(CAPTURED);
+                    changeCapturedDisplay(d.Captured);
                     // if NOT an ongoing capture, then change the player etc
-                    if (!(STAGE == Gamestage.OngoingCapture_NoClick))
+                    if (!(d.Stage == Data.Gamestage.OngoingCapture_NoClick))
                     {
-                        CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
-                        changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
-                        STAGE = Gamestage.NoClick;
+                        d.Current_player = (d.Current_player == "red") ? "white" : "red";
+                        changeDisplayMessage("Player " + d.Current_player + "'s turn");
+                        d.Stage = Data.Gamestage.NoClick;
                     }
                 }
                 // else a piece wasnt captured (just normal move) so end turn
                 else
                 {
-                    CURRENT_PLAYER = (CURRENT_PLAYER == "red") ? "white" : "red";
-                    changeDisplayMessage("Player " + CURRENT_PLAYER + "'s turn");
-                    STAGE = Gamestage.NoClick;
+                    d.Current_player = (d.Current_player == "red") ? "white" : "red";
+                    changeDisplayMessage("Player " + d.Current_player + "'s turn");
+                    d.Stage = Data.Gamestage.NoClick;
                 }
             }
             // else the player has clicked on a non highlighted tile
             // we must enforce capture
             // 1. player has reclicked on tileA
             // 2. player has clicked on a non highlighted tile (outside of the enforced capture)
-            else if (tileClicked.TileCoord == SELECTED.TileCoord)
+            else if (tileClicked.TileCoord == d.Selected.TileCoord)
             {
                 // simply toggle highlight for consistency and back to first click
-                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                List<Coord> theTiles = setHighlightsForTiles(d.Potentialmoves, false);
                 tilesWhichHaveChanged.AddRange(theTiles);
-                STAGE = Gamestage.OngoingCapture_NoClick;
+                d.Stage = Data.Gamestage.OngoingCapture_NoClick;
             }
             else
             // toggle highlight for consistency and enforce the capture
             {
-                List<Coord> theTiles = setHighlightsForTiles(POTENTIALMOVES, false);
+                List<Coord> theTiles = setHighlightsForTiles(d.Potentialmoves, false);
                 tilesWhichHaveChanged.AddRange(theTiles);
-                STAGE = Gamestage.OngoingCapture_NoClick;
+                d.Stage = Data.Gamestage.OngoingCapture_NoClick;
                 changeDisplayMessage("enforce continued capture");
             }
             
@@ -554,23 +539,23 @@ namespace checkers_wf
         {
 
             updateGuiTiles(tilesWhichHaveChanged);
-            changeCapturedDisplay(CAPTURED);
+            changeCapturedDisplay(d.Captured);
             // at the end of the processing of the input, check that there
             // are tiles containing pieces with moves for the next player's turn
             // not restricted to onlyJumps
             // PLAYER is already set to this next player (during the function)
             // this is the win condition
-            List<Tile> tilesContainingPlayerPiecesWithMoves = board.getTilesContainingPlayerPiecesWithValidMoves(CURRENT_PLAYER, false);
+            List<Tile> tilesContainingPlayerPiecesWithMoves = board.getTilesContainingPlayerPiecesWithValidMoves(d.Current_player, false);
             if (tilesContainingPlayerPiecesWithMoves.Count == 0)
             {
-                STAGE = Gamestage.End;
+                d.Stage = Data.Gamestage.End;
                 // winner = changePlayer
-                WINNER = (CURRENT_PLAYER == "red") ? "white" : "red";
+                d.Winner = (d.Current_player == "red") ? "white" : "red";
             }
 
-            if (STAGE == Gamestage.End)
+            if (d.Stage == Data.Gamestage.End)
             {
-                changeDisplayMessage("Player " + WINNER + " wins!");
+                changeDisplayMessage("Player " + d.Winner + " wins!");
                 playAgain();
             }
             // also move changeplayer into this finalsteps
