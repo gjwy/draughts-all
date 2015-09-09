@@ -97,7 +97,7 @@ namespace checkers_wf
         // versus multiplayer (host)
         private void hostMultiplayer_Click(object sender, EventArgs e)
         {
-            d.Current_player = d.Options["Start Player"];
+            d.Current_player = d.Options["Start Player"]; // should be host
             d.Gametype = "host";
             nw = new NetworkInterface(d);
 
@@ -105,8 +105,8 @@ namespace checkers_wf
             nwThread.Start();
 
             //d.Stage = Data.Gamestage.NoClick; // only set once whos turn is determined
-
-            //newGame();
+            
+           // newGame();
 
         }
 
@@ -119,6 +119,7 @@ namespace checkers_wf
             //nwThread.Start();
             //d.Stage = Data.Gamestage.NoClick;
             //newGame();
+         
             
             
         }

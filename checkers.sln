@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "network", "network\network.
 		{81EF8ABC-63DD-441F-874A-47F80547A73B} = {81EF8ABC-63DD-441F-874A-47F80547A73B}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTestApplication", "ConsoleTestApplication\ConsoleTestApplication.csproj", "{C9F3B7AC-E546-41EF-905F-9834BC540AFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C5946B3E-CFA2-405C-96DA-39361757A127}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5946B3E-CFA2-405C-96DA-39361757A127}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5946B3E-CFA2-405C-96DA-39361757A127}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9F3B7AC-E546-41EF-905F-9834BC540AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9F3B7AC-E546-41EF-905F-9834BC540AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9F3B7AC-E546-41EF-905F-9834BC540AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9F3B7AC-E546-41EF-905F-9834BC540AFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

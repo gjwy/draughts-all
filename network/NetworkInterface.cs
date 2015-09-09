@@ -12,6 +12,8 @@ namespace network
 {
     public class NetworkInterface
     {
+
+        private Data d;
         private int local_port;
         private int remote_port;
         private IPAddress local_ip;
@@ -41,25 +43,62 @@ namespace network
 
             // only required for connecting
             local_ip = getLocalIp();
+            this.d = d;
         }
 
         /* if hosting, determine currentplayer (startplayer) */
         // THREADED METHOD
         public void host()
         {
-      
+            System.Console.WriteLine("====== NW WORKER ======");
+            System.Console.WriteLine("= host ip is " + local_ip);
+            System.Console.WriteLine("= host assigning players");
+            local_player = d.Options["Start Player"];
+            remote_player = (local_player == "red") ? "white" : "red";
+
+
+            System.Console.WriteLine("= host creating ep");
             IPEndPoint ep = new IPEndPoint(local_ip, local_port);
             connectionListener = new TcpListener(ep);
             connectionListener.Start();
-            while (true)
+            while(true)
             {
-                System.Console.WriteLine("wait for connection");
+                System.Console.WriteLine("= wait for connection response");
                 gameClient = connectionListener.AcceptTcpClient();
-                // connected
+
+                System.Console.WriteLine("= received a connect response");
+                iostream = gameClient.GetStream();
+
+                System.Console.WriteLine("= send the initial p assignments");
+                // send the initial information (player assignmnents)
+                // currentplayer, remoteplayer is you
+                // using iostream.send / w/e
+
+                System.Console.WriteLine("= begin the main worker procedure");
+                // then write to and read from this stream with seperate threads
+                // while not receive particular instruction
+                while (true) // until terminate instruction received
+                {
+                    if (d.Current_player == local_player) // AND move ready to be sent
+                    {
+                        // try to send the move
+                        // then clear it
+                        // update current player (after this is sent!)
+                    }
+                    if (d.Current_player == remote_player)
+                    {
+                        // try to receive a move
+                        // apply the move to this
+                        // clear it
+                        // update current_player
+                    }
+                }
             }
-            System.Console.WriteLine("connected");
-            iostream = gameClient.GetStream();
             
+
+            // its received a particular instruction so close
+            // connection and close the thread
+            // System.Console.WriteLine("current player is " + d.Current_player);
 
             //while (current_player == "red")
             //{
@@ -82,6 +121,19 @@ namespace network
             // tell them currentplayer (startplayer)
             // send(info)
 
+        }
+
+
+        public void test()
+        {
+            while (d.Current_player == "red")
+            {
+                //System.Console.WriteLine("current plater is " + d.Current_player);
+                
+            }
+
+            // its received a particular instruction so close
+            System.Console.WriteLine("current player is " + d.Current_player);
         }
 
         /* if joining, host determines currentplayer/startplayer */
