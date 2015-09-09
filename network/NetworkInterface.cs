@@ -45,10 +45,13 @@ namespace network
             local_player = current_player;
             remote_player = (local_player == "red") ? "white" : "red";
             System.Console.WriteLine("nw- call the connect method");
+            // hosts and connects a connection to the acceptS socket
             Socket acceptS = host();
 
-            while (true)
+            while (current_player == "red")
             {
+                // repeatedly send stuff over this socket
+                
                 System.Console.WriteLine(current_player + local_player + " should variable be cahnung");
                 string message = "Hello client!" + new Random().Next();
                 byte[] data = Encoding.ASCII.GetBytes(message);
@@ -56,6 +59,7 @@ namespace network
 
                 System.Console.WriteLine("Sent a message: '{0}'", message);
             }
+            acceptS.Close();
 
 
             // loop etc
