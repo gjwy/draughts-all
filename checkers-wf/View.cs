@@ -17,7 +17,7 @@ namespace checkers_wf
         // contains game status data
         public Data d;
         
-        private NetworkInterface nw;
+        private Network nw;
         private Thread nwThread;
 
 
@@ -99,10 +99,11 @@ namespace checkers_wf
         {
             d.Current_player = d.Options["Start Player"]; // should be host
             d.Gametype = "host";
-            nw = new NetworkInterface(d);
+            nw = new Network(d);
 
-            nwThread = new Thread(nw.host);
-            nwThread.Start();
+            nw.create_connection();
+
+            // nw.recv and send are now available
 
             //d.Stage = Data.Gamestage.NoClick; // only set once whos turn is determined
             
