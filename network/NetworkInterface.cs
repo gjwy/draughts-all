@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Threading;
 using System.Net;
 
 using checkers; // for Data
@@ -61,7 +62,7 @@ namespace network
             IPEndPoint ep = new IPEndPoint(local_ip, local_port);
             connectionListener = new TcpListener(ep);
             connectionListener.Start();
-            while(true)
+            while (true)
             {
                 System.Console.WriteLine("= wait for connection response");
                 gameClient = connectionListener.AcceptTcpClient();
@@ -77,50 +78,82 @@ namespace network
                 System.Console.WriteLine("= begin the main worker procedure");
                 // then write to and read from this stream with seperate threads
                 // while not receive particular instruction
-                while (true) // until terminate instruction received
+
+                //    while (true) // until terminate instruction received
+                //    {
+                //        if (d.Current_player == local_player) // AND move ready to be sent
+                //        {
+                //            // try to send the move
+                //            // then clear it
+                //            // update current player (after this is sent!)
+                //        }
+                //        if (d.Current_player == remote_player)
+                //        {
+                //            // try to receive a move
+                //            // apply the move to this
+                //            // clear it
+                //            // update current_player
+                //        }
+                //    }
+                //}
+                int i = 0;
+                byte[] data;
+                byte[] dataRead = new byte[1024];
+
+                int sizeRead;
+                string recvdMessage = "";
+                while (recvdMessage != "(from client) last message")
                 {
-                    if (d.Current_player == local_player) // AND move ready to be sent
+                    Thread.Sleep(0000);
+                    if (iostream.CanWrite)
                     {
-                        // try to send the move
-                        // then clear it
-                        // update current player (after this is sent!)
+                        if (i == 400)
+                        {
+                            // host terminates the connection
+                            data = Encoding.ASCII.GetBytes("(from host) last message");
+                        }
+                        else
+                        {
+                            data = Encoding.ASCII.GetBytes("(from host) " + i.ToString());
+                            i++;
+                        }
+                        iostream.Write(data, 0, data.Length);
+                        
                     }
-                    if (d.Current_player == remote_player)
+                    if (iostream.CanRead)
                     {
-                        // try to receive a move
-                        // apply the move to this
-                        // clear it
-                        // update current_player
+                        sizeRead = iostream.Read(dataRead, 0, dataRead.Length);
+                        recvdMessage = Encoding.ASCII.GetString(dataRead, 0, sizeRead);
+                        System.Console.WriteLine("I have received {0}", recvdMessage);
                     }
                 }
+
+                // its received a particular instruction so close
+                // connection and close the thread
+                // System.Console.WriteLine("current player is " + d.Current_player);
+
+                //while (current_player == "red")
+                //{
+                //    // repeatedly send stuff over this socket
+
+                //    System.Console.WriteLine(current_player + local_player + " should variable be cahnung");
+                //    string message = "Hello client!" + new Random().Next();
+                //    byte[] data = Encoding.ASCII.GetBytes(message);
+                //    acceptS.Send(data);
+
+                //    System.Console.WriteLine("Sent a message: '{0}'", message);
+                //}
+                //acceptS.Close();
+
+
+                // loop etc
+                // wait for a connect
+                // while ()
+                // on connect, tell the client their assigned player (not thisplayer)
+                // tell them currentplayer (startplayer)
+                // send(info)
+
             }
-            
-
-            // its received a particular instruction so close
-            // connection and close the thread
-            // System.Console.WriteLine("current player is " + d.Current_player);
-
-            //while (current_player == "red")
-            //{
-            //    // repeatedly send stuff over this socket
-                
-            //    System.Console.WriteLine(current_player + local_player + " should variable be cahnung");
-            //    string message = "Hello client!" + new Random().Next();
-            //    byte[] data = Encoding.ASCII.GetBytes(message);
-            //    acceptS.Send(data);
-
-            //    System.Console.WriteLine("Sent a message: '{0}'", message);
-            //}
-            //acceptS.Close();
-
-
-            // loop etc
-            // wait for a connect
-            // while ()
-            // on connect, tell the client their assigned player (not thisplayer)
-            // tell them currentplayer (startplayer)
-            // send(info)
-
         }
 
 
