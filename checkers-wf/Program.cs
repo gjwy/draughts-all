@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using checkers;
+using checkers_wf.Controller;
 
 namespace checkers_wf
 {
@@ -16,15 +17,11 @@ namespace checkers_wf
         [STAThread]
         static void Main()
         {
-            // creates the model
-            Board model = new Board();
+            
 
             // creates the controller
+            Controller.Controller controller = new Controller.Controller();
 
-            // starts the View module running
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ViewControler(model));
         }
     }
 }

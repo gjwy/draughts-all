@@ -23,5 +23,6 @@ namespace network
         /* retrieve an item from the recvd queue)
            return? or call apply methods etc.. */
         void recv_from_connection();
+        
     }
 }
