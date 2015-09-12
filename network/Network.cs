@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Net;
 
+
 using checkers; // for Data
 
 namespace network
@@ -27,9 +28,12 @@ namespace network
         private TcpListener connectionListener;
 
         private NetworkStream iostream = null;
+        private bool connectionIsEstablished = false;
 
         private string recv = "";
         private string send = ""; // cant use auto-prop since wish to only set SEND etc
+
+        Thread connectionThread;
 
 
 
@@ -53,7 +57,17 @@ namespace network
 
         /* if hosting, determine currentplayer (startplayer) */
         // THREADED METHOD
-        public void create_connection()
+        public Thread create_connection()
+        {
+            
+            connectionThread = new Thread(threaded_connection);
+            connectionThread.Start();
+            return connectionThread;
+        }
+
+
+
+        private void threaded_connection()
         {
             System.Console.WriteLine("====== NW WORKER ======");
             System.Console.WriteLine("= host ip is " + local_ip);
@@ -66,75 +80,19 @@ namespace network
             IPEndPoint ep = new IPEndPoint(local_ip, local_port);
             connectionListener = new TcpListener(ep);
             connectionListener.Start();
-            while (iostream == null)
-            {
-                System.Console.WriteLine("= wait for connection response");
-                gameClient = connectionListener.AcceptTcpClient();
 
-                System.Console.WriteLine("= received a connect response");
-                iostream = gameClient.GetStream();
-            }
-            // now iostream is initialised
-
-            Thread t = new Thread(threadedStream);
-            t.Start();
-
-            // read from recv field
-            // set send field
-
-            // host do host things (assignments)
+            gameClient = connectionListener.AcceptTcpClient();
+            
+            System.Console.WriteLine("= received a connect response");
+            iostream = gameClient.GetStream();
+            connectionIsEstablished = true;
 
 
 
 
 
+        }
 
-                //    while (true) // until terminate instruction received
-                //    {
-                //        if (d.Current_player == local_player) // AND move ready to be sent
-                //        {
-                //            // try to send the move
-                //            // then clear it
-                //            // update current player (after this is sent!)
-                //        }
-                //        if (d.Current_player == remote_player)
-                //        {
-                //            // try to receive a move
-                //            // apply the move to this
-                //            // clear it
-                //            // update current_player
-                //        }
-                //    }
-                //}
-                
-
-                // its received a particular instruction so close the STREAM
-                // connection and close the thread
-                // System.Console.WriteLine("current player is " + d.Current_player);
-
-                //while (current_player == "red")
-                //{
-                //    // repeatedly send stuff over this socket
-
-                //    System.Console.WriteLine(current_player + local_player + " should variable be cahnung");
-                //    string message = "Hello client!" + new Random().Next();
-                //    byte[] data = Encoding.ASCII.GetBytes(message);
-                //    acceptS.Send(data);
-
-                //    System.Console.WriteLine("Sent a message: '{0}'", message);
-                //}
-                //acceptS.Close();
-
-
-                // loop etc
-                // wait for a connect
-                // while ()
-                // on connect, tell the client their assigned player (not thisplayer)
-                // tell them currentplayer (startplayer)
-                // send(info)
-
-            }
-        
 
 
         public void test()
@@ -190,6 +148,14 @@ namespace network
             // apply move, chage state to allow own move
             // send own move back
         }
+
+        public void create_threadedStream()
+        {
+            Thread t = new Thread(threadedStream);
+            t.Start();
+        }
+
+
 
         /* Run in worker thread, only called by host/join_connection functions */
         // places and reads from two field variables
@@ -264,6 +230,16 @@ namespace network
             {
                 send = value;
             }
+        }
+
+        public bool streamExists()
+        {
+            return !(null == this.iostream);
+        }
+
+        public bool isConnect()
+        {
+            return connectionIsEstablished;
         }
 
     }

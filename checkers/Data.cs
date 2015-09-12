@@ -48,7 +48,7 @@ namespace checkers
         {
             get
             {
-                return this.Gametype;
+                return this.gametype;
             }
             set
             {

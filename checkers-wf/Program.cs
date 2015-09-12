@@ -24,7 +24,7 @@ namespace checkers_wf
             // starts the View module running
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ViewControler(model));
+            Application.Run(new View(model));
         }
     }
 }

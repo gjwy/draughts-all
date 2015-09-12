@@ -82,6 +82,7 @@
     <Compile Include="CirclePanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Game\Game.cs" />
     <Compile Include="View-guiTiles.cs">
       <SubType>Form</SubType>
     </Compile>
