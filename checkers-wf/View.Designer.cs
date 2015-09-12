@@ -1,6 +1,6 @@
 ﻿namespace checkers_wf
 {
-    partial class View
+    partial class ViewControler
     {
         /// <summary>
         /// Required designer variable.

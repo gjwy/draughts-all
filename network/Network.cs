@@ -201,7 +201,6 @@ namespace network
 
             int sizeRead;
 
-            // while netgameongoing (got from host/client) is true
             while (recv != "(from client) last message")
             {
                 Thread.Sleep(0000);
@@ -266,7 +265,6 @@ namespace network
                 send = value;
             }
         }
-        
 
     }
 

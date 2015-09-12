@@ -5,12 +5,11 @@ using System.Threading;
 
 using checkers;
 using network;
-using checkers_wf.Controller;
 
 
 namespace checkers_wf
 {
-    public partial class View : Form
+    public partial class ViewControler : Form
     {
 
         // internal model
@@ -26,7 +25,7 @@ namespace checkers_wf
 
         
 
-        public View(Board board)
+        public ViewControler(Board board)
         {
             this.DoubleBuffered = true;
             this.d = new Data();
@@ -100,7 +99,9 @@ namespace checkers_wf
         {
             d.Current_player = d.Options["Start Player"]; // should be host
             d.Gametype = "host";
-            //Controller.Controller c = new Controller.Controller(d);
+            nw = new Network(d);
+
+            nw.create_connection();
 
             // nw.recv and send are now available
 
@@ -144,7 +145,7 @@ namespace checkers_wf
 
         /****************** Code used by handlers *********************/
 
-        public void newGame()
+        private void newGame()
         {
 
             board.populateGameBoard();       // model method
