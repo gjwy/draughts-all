@@ -55,20 +55,17 @@ namespace network
             this.d = d;
         }
 
-        /* if hosting, determine currentplayer (startplayer) */
-        // THREADED METHOD
-        public Thread create_connection()
+     
+
+
+
+        public void host()
         {
-            
-            connectionThread = new Thread(threaded_connection);
-            connectionThread.Start();
-            return connectionThread;
-        }
+            // this while loop allows for the pending method to be used
+            // this use prevents the accepttcpclient from blocking
+            // this allows the abort event to be sent by the main thread 
+            // if the process is cancelled by the user
 
-
-
-        private void threaded_connection()
-        {
             System.Console.WriteLine("====== NW WORKER ======");
             System.Console.WriteLine("= host ip is " + local_ip);
             System.Console.WriteLine("= host assigning players");
@@ -78,19 +75,55 @@ namespace network
 
             System.Console.WriteLine("= host creating ep");
             IPEndPoint ep = new IPEndPoint(local_ip, local_port);
+            
             connectionListener = new TcpListener(ep);
             connectionListener.Start();
 
-            gameClient = connectionListener.AcceptTcpClient();
+            while (!connectionIsEstablished)
+            {
+
+                if (connectionListener.Pending())
+                {
+                    gameClient = connectionListener.AcceptTcpClient();
+
+                    System.Console.WriteLine("= received a connect response");
+                    iostream = gameClient.GetStream();
+                    connectionIsEstablished = true;
+                }
+
+            }
+
+
+
+
+
+
+        }
+
+        public void close_host_connection()
+        {
+            try
+            {
+                // will only close if its not null (was actually used)
+                // this also closes the associated datastream (iostream)
+                gameClient.Close();
+            }
+            catch (NullReferenceException e)
+            {
+                System.Console.WriteLine("canceled before a client connected");
+                // as opposed to timeout or a normal use-case endgame closing
+            }
+
+            try
+            {
+                connectionListener.Stop();
+            }
+            catch (NullReferenceException e)
+            {
+                System.Console.WriteLine("the listener was null?");
+            }
+
             
-            System.Console.WriteLine("= received a connect response");
-            iostream = gameClient.GetStream();
-            connectionIsEstablished = true;
-
-
-
-
-
         }
 
 
