@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStreamObject.cs" />
     <Compile Include="NetworkInterface.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Program.cs" />

@@ -259,6 +259,7 @@ namespace checkers_wf.Game
 
             // after send/receive of this data, 
             // use that info to set the appropriate states
+            //
 
 
 

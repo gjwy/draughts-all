@@ -212,7 +212,7 @@ namespace network
             while (true)
             {
                 Thread.Sleep(0000);
-                if (iostream.CanWrite)
+                if (iostream.CanWrite) // && send is set?
                 {
                     if (i == 400)
                     {
@@ -291,6 +291,9 @@ namespace network
         {
             return connectionIsEstablished;
         }
+
+
+   
 
     }
 
