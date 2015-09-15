@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Threading;
 using System.Net;
+using System.ComponentModel;
 
 
 using checkers; // for Data
@@ -59,7 +60,7 @@ namespace network
 
 
 
-        public void host()
+        public void host(BackgroundWorker w, DoWorkEventArgs e)
         {
             // this while loop allows for the pending method to be used
             // this use prevents the accepttcpclient from blocking
@@ -81,6 +82,13 @@ namespace network
 
             while (!connectionIsEstablished)
             {
+                // check to make sure the main thread hasnt issued a cancel work
+                // to this worker thread
+                if (w.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
 
                 if (connectionListener.Pending())
                 {

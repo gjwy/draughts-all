@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using checkers;
 using network;
+using System.ComponentModel;
 
 namespace checkers_wf.Game
 {
@@ -14,6 +15,7 @@ namespace checkers_wf.Game
     class Game
     {
         private Form form;
+        BackgroundWorker bw;
         Form f;
         private Thread t;
         Thread t1;
@@ -72,8 +74,16 @@ namespace checkers_wf.Game
             data.Stage = Data.Gamestage.NoClick;
             nw = new Network(data);
 
-            t1 = new Thread(threaded_start_nw_host);
-            t1.Start();
+            //t1 = new Thread(threaded_start_nw_host);
+            //t1.Start();
+
+            bw = new BackgroundWorker();
+            bw.DoWork += Bw_DoWork;
+            bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
+            bw.WorkerSupportsCancellation = true;
+            bw.RunWorkerAsync();
+
+
             waitDialogue();
 
             // this loop, polls the result of the thread operation
@@ -95,18 +105,53 @@ namespace checkers_wf.Game
             //view.newGame();
         }
 
+        private void Bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // worker thread completed, back to main thread
+            if (e.Error != null)
+            {
+                System.Console.WriteLine("error1");
+            }
+            else if (e.Cancelled)
+            {
+                System.Console.WriteLine("aborted by main (user)");
+            }
+            else
+            {
+                System.Console.WriteLine("success");
+                //
+                // TODO
+                // PROCEED WITH GAME
+                // CONNECTION ESTABLISHED
+                // SEND INITIAL DATA
+                // START GAME INSTANCE
+                // LOOP UNTIL ENDGAME(host identifies)
+                // SEND FINAL DATA?
+                // CLOSE CONNECTION
+
+                // CLOSE CONNECTIONS AT END
+            }
+        }
+
+        private void Bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.Console.WriteLine("in bw thread");
+            BackgroundWorker w = sender as BackgroundWorker;
+            nw.host(w, e);
+        }
+
         private void waitDialogue()
         {
             f = new Form();
             f.Text = "WAIT...";
             Button b = new Button();
             b.Text = "Cancel";
-            b.Click += connectionResult;
+            b.Click += abortworker;
             f.Controls.Add(b);
             f.ShowDialog();
         }
 
-        private void connectionResult(Object sender, System.EventArgs e)
+        private void abortworker(Object sender, System.EventArgs e)
         {
             System.Console.WriteLine("f2 happened");
             System.Console.WriteLine("i was called by " + sender.ToString());
@@ -117,26 +162,16 @@ namespace checkers_wf.Game
                 System.Console.WriteLine("user canceled");
                 // user canceled, close dialogue and terminate thread
                 f.Close();
-                t1.Abort(); // ends the thread upon which the connecting method is working
+                //t1.Abort(); // ends the thread upon which the connecting method is working
                 // reset the cahnges to socket smade by the t1 thread
                 // nwresets,,
+                if (bw.WorkerSupportsCancellation == true)
+                {
+                    bw.CancelAsync();
+                }
                 nw.close_host_connection();
 
 
-            }
-            else // (sender is Thread)
-            {
-                System.Console.WriteLine("t1 returned - connection made");
-                // TODO
-                // PROCEED WITH GAME
-                // CONNECTION ESTABLISHED
-                // SEND INITIAL DATA
-                // START GAME INSTANCE
-                // LOOP UNTIL ENDGAME(host identifies)
-                // SEND FINAL DATA?
-                // CLOSE CONNECTION
-
-            // CLOSE CONNECTIONS AT END
             }
 
         }
@@ -146,9 +181,9 @@ namespace checkers_wf.Game
         {
             
             Thread.Sleep(200); // allow time for dialogue to be displayed by main thread
-            nw.host();
+            // nw.host();
             // if gets to here, connected
-            connectionResult(this, null);
+            abortworker(this, null);
 
 
         }
