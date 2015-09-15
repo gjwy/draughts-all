@@ -31,8 +31,9 @@ namespace network
         private NetworkStream iostream = null;
         private bool connectionIsEstablished = false;
 
+        private bool isRecv = false;
         private string recv = "";
-        private string send = ""; // cant use auto-prop since wish to only set SEND etc
+        private string send = "cat"; // cant use auto-prop since wish to only set SEND etc
 
         Thread connectionThread;
 
@@ -208,7 +209,7 @@ namespace network
 
             int sizeRead;
 
-            while (recv != "(from client) last message")
+            while (true)
             {
                 Thread.Sleep(0000);
                 if (iostream.CanWrite)
@@ -220,17 +221,22 @@ namespace network
                     }
                     else
                     {
-                        data = Encoding.ASCII.GetBytes("(from host) " + i.ToString());
-                        i++;
+                        data = Encoding.ASCII.GetBytes(this.send);
+                        //i++;
                     }
                     iostream.Write(data, 0, data.Length);
+                    // clear the send after sending?
+                    data = new byte[1024]; // how to clear>
+
 
                 }
                 if (iostream.CanRead)
                 {
                     sizeRead = iostream.Read(dataRead, 0, dataRead.Length);
                     recv = Encoding.ASCII.GetString(dataRead, 0, sizeRead);
-                    System.Console.WriteLine("I have received {0}", recv);
+                   
+                    isRecv = true;
+                    dataRead = new byte[1024]; // clears it ???
                 }
             }
         }
@@ -257,12 +263,15 @@ namespace network
             throw new Exception("IP not found");
         }
 
-        public string Recv
+        public bool IsRecv()
         {
-            get
-            {
-                return recv;
-            }
+            return this.isRecv;
+        }
+
+        public string Recv()
+        {
+            this.isRecv = false;
+            return recv;
         }
 
         public string Send

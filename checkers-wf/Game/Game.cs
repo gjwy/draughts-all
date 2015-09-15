@@ -105,6 +105,11 @@ namespace checkers_wf.Game
             //view.newGame();
         }
 
+        /* This eventhandler handles the background worker complete event.
+           It interprets the CompletedEventArgs of the event to determine 
+           how it completed (user canceled / error / success) and takes an appropriate action.
+           This is processed in the main thread.
+           */
         private void Bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // worker thread completed, back to main thread
@@ -119,20 +124,12 @@ namespace checkers_wf.Game
             else
             {
                 System.Console.WriteLine("success");
-                //
-                // TODO
-                // PROCEED WITH GAME
-                // CONNECTION ESTABLISHED
-                // SEND INITIAL DATA
-                // START GAME INSTANCE
-                // LOOP UNTIL ENDGAME(host identifies)
-                // SEND FINAL DATA?
-                // CLOSE CONNECTION
-
-                // CLOSE CONNECTIONS AT END
+                f.Close();
+                startGameLogic();
             }
         }
-
+        /* this code is run on the background worker thread contained in the
+           sender reference */
         private void Bw_DoWork(object sender, DoWorkEventArgs e)
         {
             System.Console.WriteLine("in bw thread");
@@ -214,6 +211,102 @@ namespace checkers_wf.Game
             System.Console.WriteLine(data.Current_player + " is the current player");
             data.Stage = Data.Gamestage.NoClick;
             view.newGame();
+        }
+
+
+
+
+        private void startGameLogic()
+        {
+            nw.create_threadedStream(); // child thread for stream
+            view.newGame(); // main thread allowing user interaction gui
+            // send smth
+            // loop using Recv, Send
+            Thread t2 = new Thread(hostsgamelogicloop); // child thread allowing continuous polling for the game
+            t2.Start();
+           
+
+            //
+            // TODO
+            // PROCEED WITH GAME
+            // CONNECTION ESTABLISHED
+            // SEND INITIAL DATA
+            // START GAME INSTANCE
+            // LOOP UNTIL ENDGAME(host identifies)
+            // SEND FINAL DATA?
+            // CLOSE CONNECTION
+
+            // CLOSE CONNECTIONS AT END
+        }
+
+        // specific to host (ability to end / determines intiial);
+        private void hostsgamelogicloop()
+        {
+            // host and client are connected now
+            // sharing the iostream
+            // this logic loop will use a multiplayer gamestate var
+
+            // Current player::
+            // This player::
+            // Remote player::
+            // Multi state::
+            // This Player Move::
+
+            // Initial data:
+            //      player assignments / who starts (current player)
+            // Subsequent data:
+            //      Move representation
+
+            // after send/receive of this data, 
+            // use that info to set the appropriate states
+
+
+
+            string rcv = null;
+            while (rcv != "STOP")
+            {
+
+                Thread.Sleep(1000);
+                System.Console.WriteLine("player {0} turn", data.Current_player);
+                System.Console.WriteLine(" recv bool is {0}", nw.IsRecv());
+                // if data.localturncompleted
+                // then turn move ready to be sent
+                // send turn move
+                // change state to data.waitingformoveresponse
+                // if data.waitingformoveresponse && nw.Recv()
+                // change data state to data.applyingmoveresponse
+                // change state to data.localturn etc..
+
+                if (data.Current_player == "red" && data.IsReadyToSend == true) // eg host player
+                {
+                    
+                    // send the move
+                    nw.Send = "some move";
+                    //System.Console.WriteLine("Send: {0}",  "some move");
+                    // clear the move from data
+                    // change the current player, so will now be waiting on response
+                    data.Current_player = "white";
+                    System.Console.WriteLine("sent a move (some move), player is now white");
+                }
+                if (data.Current_player == "white" && nw.IsRecv())
+                {
+
+                    // receive
+                    rcv = nw.Recv();
+                    
+                    //System.Console.WriteLine("Recv: {0}", rcv);
+                    // apply the move
+
+                    // change player
+                    data.Current_player = "red";
+                    System.Console.WriteLine("received a move ({0}), player is now red", rcv);
+                }
+                
+                
+            }
+
+            System.Console.WriteLine("end routine");
+
         }
 
     }

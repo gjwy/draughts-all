@@ -27,6 +27,7 @@ namespace checkers
         private string current_player; // the current player
         private Tile selected;
         private List<Move> potentialmoves;
+        private bool isReadyToSend = true;
 
         public Data()
         {
@@ -140,6 +141,14 @@ namespace checkers
             set
             {
                 this.potentialmoves = value;
+            }
+        }
+
+        public bool IsReadyToSend
+        {
+            get
+            {
+                return this.isReadyToSend;
             }
         }
     

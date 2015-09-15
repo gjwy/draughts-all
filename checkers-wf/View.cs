@@ -549,6 +549,14 @@ namespace checkers_wf
             }
             // also move changeplayer into this finalsteps
 
+            // if game is multiplayer, at the end of each turn
+            // change state to .turncompleted
+            // also, (recentmost move / turn outcome is saved ready to be sent)
+            if (data.Gametype == "host" || data.Gametype == "join")
+            {
+                // data.multiplayerstate = turncompleted
+            }
+
 
 
 
