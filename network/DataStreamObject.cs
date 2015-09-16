@@ -33,7 +33,7 @@ namespace network
         // encodes it to byte[], (for sending, use the .Length property)
         public byte[] encode()
         {
-            byte[] byteArray;
+            byte[] byteArray = null;
 
             // this.encode
 
@@ -74,7 +74,7 @@ namespace network
         {
             get
             {
-                return (string)this["HostPlayer";]
+                return (string)this["HostPlayer"];
             }
             set
             {
