@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using checkers;
+using System.Runtime.Serialization;
 
 namespace network
 
@@ -15,10 +16,12 @@ namespace network
        When reading from this object the dictionary values will need to be cast
        correctly. */
        
-    class DataStreamObject : Dictionary<String, object>
+    [Serializable]
+    public class DataStreamObject : Dictionary<String, object>
     {
 
-        // 
+        //
+         
         public DataStreamObject()
         {
             Add("CurrentPlayer", "");
@@ -27,29 +30,15 @@ namespace network
             Add("MoveTotal", null);
             Add("AddInfo", "");
         }
-        
-        
-        
-        // encodes it to byte[], (for sending, use the .Length property)
-        public byte[] encode()
-        {
-            byte[] byteArray = null;
 
-            // this.encode
+        // the deserialiser requires this contrusctor
+        public DataStreamObject(SerializationInfo info, StreamingContext context) : base(info, context) {
 
-            return byteArray;
         }
 
-        // static since will be called witha byte[] TO BE converted back to
-        // a dso. TODO throw exception if byte[] is corruted or not originally a dso
-        // this is the most logical place to put the method
-        public static DataStreamObject decode(byte[] byteArray)
-        {
-            //decode array to this
-            DataStreamObject dso = new DataStreamObject();
 
-            return dso;
-        }
+
+
 
 
 

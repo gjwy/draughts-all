@@ -262,14 +262,13 @@ namespace checkers_wf.Game
             //
 
 
-
-            string rcv = null;
-            while (rcv != "STOP")
+            DataStreamObject rcv = new DataStreamObject(); ;
+            while (rcv.AddInfo != "STOP")
             {
 
                 Thread.Sleep(1000);
-                System.Console.WriteLine("player {0} turn", data.Current_player);
-                System.Console.WriteLine(" recv bool is {0}", nw.IsRecv());
+               // System.Console.WriteLine("player {0} turn", data.Current_player);
+                //System.Console.WriteLine(" recv bool is {0}", nw.IsRecv());
                 // if data.localturncompleted
                 // then turn move ready to be sent
                 // send turn move
@@ -280,14 +279,15 @@ namespace checkers_wf.Game
 
                 if (data.Current_player == "red" && data.IsReadyToSend == true) // eg host player
                 {
-                    
+                    DataStreamObject dso = new DataStreamObject();
+                    dso.AddInfo = "testMove";
                     // send the move
-                    nw.Send = "some move";
+                    nw.Send = dso;
                     //System.Console.WriteLine("Send: {0}",  "some move");
                     // clear the move from data
                     // change the current player, so will now be waiting on response
-                    data.Current_player = "white";
-                    System.Console.WriteLine("sent a move (some move), player is now white");
+                    //data.Current_player = "white";
+                    //System.Console.WriteLine("sent a move ({0}), player is now white", dso.AddInfo);
                 }
                 if (data.Current_player == "white" && nw.IsRecv())
                 {
@@ -295,12 +295,12 @@ namespace checkers_wf.Game
                     // receive
                     rcv = nw.Recv();
                     
-                    //System.Console.WriteLine("Recv: {0}", rcv);
+                    System.Console.WriteLine("i have received  {0}", rcv.AddInfo);
                     // apply the move
 
                     // change player
-                    data.Current_player = "red";
-                    System.Console.WriteLine("received a move ({0}), player is now red", rcv);
+                    //data.Current_player = "red";
+                    //System.Console.WriteLine("received a move ({0}), player is now red", rcv.AddInfo);
                 }
                 
                 

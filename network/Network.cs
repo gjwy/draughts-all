@@ -8,8 +8,11 @@ using System.Threading;
 using System.Net;
 using System.ComponentModel;
 
+using System.Runtime.Serialization.Formatters.Binary;
+
 
 using checkers; // for Data
+using System.IO;
 
 namespace network
 {
@@ -31,11 +34,14 @@ namespace network
         private NetworkStream iostream = null;
         private bool connectionIsEstablished = false;
 
-        private bool isRecv = false;
-        private string recv = "";
-        private string send = "cat"; // cant use auto-prop since wish to only set SEND etc
+        private bool isRecvReady = false;
+        private bool isSendReady = false;
+        private DataStreamObject recv = new DataStreamObject();
+        private DataStreamObject send = new DataStreamObject(); // cant use auto-prop since wish to only set SEND etc
 
-        Thread connectionThread;
+        BinaryFormatter formatter = new BinaryFormatter();
+
+        //Thread connectionThread;
 
 
 
@@ -203,40 +209,34 @@ namespace network
         // places and reads from two field variables
         private void threadedStream()
         {
-            int i = 0;
-            byte[] data;
-            byte[] dataRead = new byte[1024];
-
-            int sizeRead;
-
+            System.Console.WriteLine("===========threaded stream created");
             while (true)
             {
-                Thread.Sleep(0000);
-                if (iostream.CanWrite) // && send is set?
+                
+                if (iostream.CanWrite && this.isSendReady) // && send is set?
                 {
-                    if (i == 400)
-                    {
-                        // host terminates the connection
-                        data = Encoding.ASCII.GetBytes("(from host) last message");
-                    }
-                    else
-                    {
-                        data = Encoding.ASCII.GetBytes(this.send);
-                        //i++;
-                    }
-                    iostream.Write(data, 0, data.Length);
+                    System.Console.WriteLine("begin send");
+
+                    formatter.Serialize(iostream, this.send);
+                    System.Console.WriteLine("end send");
+
+                    // syncronisation linmes
+                    isSendReady = false;
+                    isRecvReady = true;
                     // clear the send after sending?
-                    data = new byte[1024]; // how to clear>
+                    
 
 
                 }
-                if (iostream.CanRead)
+                if (iostream.CanRead && this.isRecvReady)
                 {
-                    sizeRead = iostream.Read(dataRead, 0, dataRead.Length);
-                    recv = Encoding.ASCII.GetString(dataRead, 0, sizeRead);
-                   
-                    isRecv = true;
-                    dataRead = new byte[1024]; // clears it ???
+                    System.Console.WriteLine("begin read");
+                    this.recv = (DataStreamObject) formatter.Deserialize(iostream);
+                    //isRecvReady = true;
+                    System.Console.WriteLine("end read");
+                    this.isRecvReady = false;
+                    this.isSendReady = true;
+                    
                 }
             }
         }
@@ -265,20 +265,24 @@ namespace network
 
         public bool IsRecv()
         {
-            return this.isRecv;
+            return this.isRecvReady;
         }
 
-        public string Recv()
+        public DataStreamObject Recv()
         {
-            this.isRecv = false;
+            this.isRecvReady = false;
             return recv;
         }
 
-        public string Send
+
+        public DataStreamObject Send
         {
             set
             {
+
                 send = value;
+                isSendReady = true;
+                System.Console.WriteLine("set to true");
             }
         }
 

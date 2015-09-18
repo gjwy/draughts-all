@@ -16,6 +16,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "network", "network\network.
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTestApplication", "ConsoleTestApplication\ConsoleTestApplication.csproj", "{C9F3B7AC-E546-41EF-905F-9834BC540AFB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5946B3E-CFA2-405C-96DA-39361757A127} = {C5946B3E-CFA2-405C-96DA-39361757A127}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

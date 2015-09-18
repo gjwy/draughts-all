@@ -7,6 +7,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
+using System.Runtime.Serialization.Formatters.Binary;
+
+using network;
+
 namespace ConsoleTestApplication
 {
     class Program
@@ -29,36 +33,38 @@ namespace ConsoleTestApplication
             string curP = "red";
 
             int i = 0;
-            byte[] data;
             byte[] dataRead = new byte[1024]; // shpuld be large enough for my stuff
-            int sizeRead;
-            string sendmessage = "hippo";
-            string recvdMessage = "";
+            DataStreamObject sendmessage;
+            DataStreamObject recvdMessage;
+
+            BinaryFormatter formatter = new BinaryFormatter();
             while (i <= 10)
             {
-                Thread.Sleep(4000);
+                System.Console.WriteLine(curP);
 
                 if (iostream.CanWrite && curP == "white") // eg us
                 {
-                    data = Encoding.ASCII.GetBytes(sendmessage);
-                    iostream.Write(data, 0, data.Length);
-                    System.Console.Write("i have sent: {0}", sendmessage);
-                    data = new byte[1024];
+                    sendmessage = new DataStreamObject();
+                    sendmessage.AddInfo = "response";
+                    formatter.Serialize(iostream, sendmessage);
+                    System.Console.Write("client has finished sending {0}", sendmessage.AddInfo);
                     curP = "red"; // cahange it to them
                 }
                 if (iostream.CanRead && curP == "red") // them, read their move
                 {
-                    sizeRead = iostream.Read(dataRead, 0, dataRead.Length);
-                    recvdMessage = Encoding.ASCII.GetString(dataRead, 0, sizeRead);
-                    dataRead = new byte[1024];
-                    System.Console.Write("i have received: {0}", recvdMessage);
+                    System.Console.WriteLine("here1");
+
+                    recvdMessage = (DataStreamObject) formatter.Deserialize(iostream);
+                    
+                    System.Console.Write("i have received: {0}", recvdMessage.AddInfo);
                     // do stuf with it
                     curP = "white";
                 }
                 i++;
             }
-            data = Encoding.ASCII.GetBytes("STOP");
-            iostream.Write(data, 0, data.Length);
+            sendmessage = new DataStreamObject();
+            sendmessage.AddInfo = "STOP";
+            formatter.Serialize(iostream, sendmessage);
             //c.Close(); ~let the host close it
 
             System.Console.WriteLine("null | null | null");
