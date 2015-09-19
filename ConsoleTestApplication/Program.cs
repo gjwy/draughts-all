@@ -41,7 +41,7 @@ namespace ConsoleTestApplication
             BinaryFormatter formatter = new BinaryFormatter();
             string mode = "recv";
 
-            while (i <= 20)
+            while (i <= 9000)
             {
 
                 if (iostream.CanWrite && mode == "send") // eg us

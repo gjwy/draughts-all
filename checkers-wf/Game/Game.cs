@@ -265,7 +265,7 @@ namespace checkers_wf.Game
             DataStreamObject rcv = new DataStreamObject(); ;
             string gFlag = "send";
             System.Console.WriteLine("gflag set to send");
-            int i = 89;
+            int i = 10000;
             while (rcv.AddInfo != "STOP")
             {
                 
@@ -279,7 +279,7 @@ namespace checkers_wf.Game
                 // change data state to data.applyingmoveresponse
                 // change state to data.localturn etc..
 
-                if (data.Current_player == "red" && gFlag == "send") // eg host player
+                if (data.Current_player == "red" && gFlag == "send") // and move ready to be sent
                 {
                     
                     nw.flag = "send";
@@ -298,6 +298,7 @@ namespace checkers_wf.Game
                     }
 
                     // prepare to recv new again
+                    // logical to clear sent here (since should hav esent due to while loop)
                     nw.IsRecvItem = false;
                     gFlag = "recv";
                     System.Console.WriteLine("gflag set to recv");
@@ -324,8 +325,10 @@ namespace checkers_wf.Game
                     System.Console.WriteLine("======= recvd: {0}", rcv.AddInfo);
                     // have recvd so now prepare to send
                     // clear the old has sent
-                    nw.IsSentItem = false;
 
+                    
+                    nw.IsSentItem = false;
+                    // clear the item from nw.recv too
                     gFlag = "send";
                     System.Console.WriteLine("gflag set to send");
 
@@ -335,6 +338,17 @@ namespace checkers_wf.Game
                     // change player
                     //data.Current_player = "red";
                     //System.Console.WriteLine("received a move ({0}), player is now red", rcv.AddInfo);
+                }
+
+                if (data.Current_player == "red" && gFlag == "processRecv")
+                {
+                    // if rcv.AddInfo == STOP {endgame}
+
+                    // if recv.AddInfo == MOVE {apply move}(change state, apply, update gui)
+                    // change state
+                    // view.apply(MOVE(s)) {also updates gui}
+                    // change state
+
                 }
                 
                 
