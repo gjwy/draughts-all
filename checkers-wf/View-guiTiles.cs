@@ -237,7 +237,7 @@ namespace checkers_wf
 
                 if (modelTile.IsHighlighted)
                 {
-                    System.Console.WriteLine("highlight something");
+                    //System.Console.WriteLine("highlight something");
                     //guiTile.BackColor = (modelTile.IsHighlighted) ? Color.DarkBlue : guiTile.BackColor;
                     Panel highlightTile = new Panel();
                     highlightTile.BackColor = Color.Blue;
@@ -250,7 +250,7 @@ namespace checkers_wf
                 if (!modelTile.IsHighlighted)
                 {
                     guiTile.Controls.RemoveByKey("highlightTile");
-                    System.Console.WriteLine("HIGHLIGHT SHOULD BE REMOVED HERE");
+                    //System.Console.WriteLine("HIGHLIGHT SHOULD BE REMOVED HERE");
                 }
                 // piece (add a piece panel to the tile)
                 if (modelTile.IsOccupied)
@@ -276,7 +276,7 @@ namespace checkers_wf
                         guiTile.Controls.RemoveByKey("guiPiece");
                     }
                     
-                    System.Console.WriteLine("GUIPIECE SHOULD BE REMOVED HERE");
+                    //System.Console.WriteLine("GUIPIECE SHOULD BE REMOVED HERE");
                 }
             }
         }

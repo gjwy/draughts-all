@@ -297,7 +297,8 @@ namespace checkers_wf
 
             else
             {
-                System.Console.WriteLine("piece clicked is not of cur player");
+                changeDisplayMessage("piece clicked is not of cur player");
+                
             }
 
             return tilesWhichHaveChanged;
@@ -314,7 +315,7 @@ namespace checkers_wf
             // checks the second click is on a piece/tile thats highlighted (thus its in potential moves)
             if (tileClicked.IsHighlighted)
             {
-                System.Console.WriteLine("is highlighted!");
+                //System.Console.WriteLine("is highlighted!");
                 Tuple<Piece, bool> result = board.movePiece(data.Selected, tileClicked, data.Potentialmoves);
 
                 List<Coord> theTiles = setHighlightsForTiles(data.Potentialmoves, false);
@@ -448,7 +449,7 @@ namespace checkers_wf
 
             if (tileClicked.IsHighlighted) // easier than searching through potentialmoves
             {
-                System.Console.WriteLine("is highlighted!");
+                //System.Console.WriteLine("is highlighted!");
                 Tuple<Piece, bool> result = board.movePiece(data.Selected, tileClicked, data.Potentialmoves);
 
                 List<Coord> theTiles = setHighlightsForTiles(data.Potentialmoves, false);

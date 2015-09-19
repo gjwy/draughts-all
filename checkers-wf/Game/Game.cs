@@ -263,10 +263,12 @@ namespace checkers_wf.Game
 
 
             DataStreamObject rcv = new DataStreamObject(); ;
+            string gFlag = "send";
+            System.Console.WriteLine("gflag set to send");
+            int i = 89;
             while (rcv.AddInfo != "STOP")
             {
-
-                Thread.Sleep(1000);
+                
                // System.Console.WriteLine("player {0} turn", data.Current_player);
                 //System.Console.WriteLine(" recv bool is {0}", nw.IsRecv());
                 // if data.localturncompleted
@@ -277,25 +279,57 @@ namespace checkers_wf.Game
                 // change data state to data.applyingmoveresponse
                 // change state to data.localturn etc..
 
-                if (data.Current_player == "red" && data.IsReadyToSend == true) // eg host player
+                if (data.Current_player == "red" && gFlag == "send") // eg host player
                 {
+                    
+                    nw.flag = "send";
+                    System.Console.WriteLine("nw.flag set to send");
+                    
+
                     DataStreamObject dso = new DataStreamObject();
-                    dso.AddInfo = "testMove";
+                    dso.AddInfo = i.ToString();
+                    i--;
                     // send the move
                     nw.Send = dso;
+                    // change the m state
+                    while(!nw.IsSentItem)
+                    {
+
+                    }
+
+                    // prepare to recv new again
+                    nw.IsRecvItem = false;
+                    gFlag = "recv";
+                    System.Console.WriteLine("gflag set to recv");
+
+
                     //System.Console.WriteLine("Send: {0}",  "some move");
                     // clear the move from data
                     // change the current player, so will now be waiting on response
                     //data.Current_player = "white";
                     //System.Console.WriteLine("sent a move ({0}), player is now white", dso.AddInfo);
                 }
-                if (data.Current_player == "white" && nw.IsRecv())
+                if (data.Current_player == "red" && gFlag == "recv")
                 {
-
-                    // receive
-                    rcv = nw.Recv();
                     
-                    System.Console.WriteLine("i have received  {0}", rcv.AddInfo);
+                    nw.flag = "recv";
+                    System.Console.WriteLine("nw.flag set to recv");
+                    // receive
+                    while (!nw.IsRecvItem)
+                    {
+
+                    }
+
+                    rcv = nw.Recv();
+                    System.Console.WriteLine("======= recvd: {0}", rcv.AddInfo);
+                    // have recvd so now prepare to send
+                    // clear the old has sent
+                    nw.IsSentItem = false;
+
+                    gFlag = "send";
+                    System.Console.WriteLine("gflag set to send");
+
+                    //System.Console.WriteLine("i have received  {0}", rcv.AddInfo);
                     // apply the move
 
                     // change player

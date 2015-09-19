@@ -34,10 +34,12 @@ namespace network
         private NetworkStream iostream = null;
         private bool connectionIsEstablished = false;
 
-        private bool isRecvReady = false;
-        private bool isSendReady = false;
+        private bool isRecvdItem = false;
+        private bool isSentItem = false;
         private DataStreamObject recv = new DataStreamObject();
         private DataStreamObject send = new DataStreamObject(); // cant use auto-prop since wish to only set SEND etc
+
+        public string flag { get; set; } = "";
 
         BinaryFormatter formatter = new BinaryFormatter();
 
@@ -213,29 +215,33 @@ namespace network
             while (true)
             {
                 
-                if (iostream.CanWrite && this.isSendReady) // && send is set?
+                if (iostream.CanWrite && this.flag == "send" && !this.IsSentItem) // && send is set?
                 {
-                    System.Console.WriteLine("begin send");
+                    while(!isSentItem)
+                    {
+                       // System.Console.WriteLine("=begin send");
 
-                    formatter.Serialize(iostream, this.send);
-                    System.Console.WriteLine("end send");
+                        formatter.Serialize(iostream, this.send);
+                       // System.Console.WriteLine("=end send");
 
-                    // syncronisation linmes
-                    isSendReady = false;
-                    isRecvReady = true;
+                        // syncronisation linmes
+
+                        this.isSentItem = true;
+                    }
+
                     // clear the send after sending?
+
+                // clear the receive
                     
 
 
                 }
-                if (iostream.CanRead && this.isRecvReady)
+                if (iostream.CanRead && this.flag == "recv" && !isRecvdItem)
                 {
-                    System.Console.WriteLine("begin read");
+                    //System.Console.WriteLine("=begin read");
                     this.recv = (DataStreamObject) formatter.Deserialize(iostream);
-                    //isRecvReady = true;
-                    System.Console.WriteLine("end read");
-                    this.isRecvReady = false;
-                    this.isSendReady = true;
+                    isRecvdItem = true;
+                    //System.Console.WriteLine("=end read");
                     
                 }
             }
@@ -263,14 +269,22 @@ namespace network
             throw new Exception("IP not found");
         }
 
-        public bool IsRecv()
+        public bool IsRecvItem
         {
-            return this.isRecvReady;
+            get
+            {
+                return this.isRecvdItem;
+            }
+            set
+            {
+                this.isRecvdItem = value;
+            }
+            
         }
 
         public DataStreamObject Recv()
         {
-            this.isRecvReady = false;
+            // clear it ready for next receive
             return recv;
         }
 
@@ -281,8 +295,19 @@ namespace network
             {
 
                 send = value;
-                isSendReady = true;
-                System.Console.WriteLine("set to true");
+                isSentItem = false;
+            }
+        }
+
+        public bool IsSentItem
+        {
+            get
+            {
+                return this.isSentItem;
+            }
+            set
+            {
+                this.isSentItem = value;
             }
         }
 

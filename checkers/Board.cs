@@ -130,7 +130,7 @@ namespace checkers
             Tile tile = getTile(fromCoord);
             if (tile.IsOccupied)
             {
-                System.Console.WriteLine("tile is occupied");
+                //System.Console.WriteLine("tile is occupied");
                 // todo
 
                 // 1. get list of naive available moves

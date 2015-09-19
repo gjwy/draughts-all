@@ -33,32 +33,35 @@ namespace ConsoleTestApplication
             string curP = "red";
 
             int i = 0;
+            int i2 = 0;
             byte[] dataRead = new byte[1024]; // shpuld be large enough for my stuff
             DataStreamObject sendmessage;
             DataStreamObject recvdMessage;
 
             BinaryFormatter formatter = new BinaryFormatter();
-            while (i <= 10)
+            string mode = "recv";
+
+            while (i <= 20)
             {
-                System.Console.WriteLine(curP);
 
-                if (iostream.CanWrite && curP == "white") // eg us
+                if (iostream.CanWrite && mode == "send") // eg us
                 {
+                    //System.Console.WriteLine("=begin send");
                     sendmessage = new DataStreamObject();
-                    sendmessage.AddInfo = "response";
+                    sendmessage.AddInfo = i2.ToString();
+                    i2++;
                     formatter.Serialize(iostream, sendmessage);
-                    System.Console.Write("client has finished sending {0}", sendmessage.AddInfo);
-                    curP = "red"; // cahange it to them
-                }
-                if (iostream.CanRead && curP == "red") // them, read their move
-                {
-                    System.Console.WriteLine("here1");
-
-                    recvdMessage = (DataStreamObject) formatter.Deserialize(iostream);
+                    //System.Console.WriteLine("=end send");
+                    mode = "recv";
                     
-                    System.Console.Write("i have received: {0}", recvdMessage.AddInfo);
-                    // do stuf with it
-                    curP = "white";
+                }
+                if (iostream.CanRead && mode == "recv") // them, read their move
+                {
+                    //System.Console.WriteLine("=begin read");
+                    recvdMessage = (DataStreamObject) formatter.Deserialize(iostream);
+                    System.Console.WriteLine("======= recvd: {0}", recvdMessage.AddInfo);
+                    //System.Console.WriteLine("=end read");
+                    mode = "send";
                 }
                 i++;
             }

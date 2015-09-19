@@ -27,7 +27,8 @@ namespace checkers
         private string current_player; // the current player
         private Tile selected;
         private List<Move> potentialmoves;
-        private bool isReadyToSend = true;
+        public bool IsReadyToSend { get; set; } = true;
+        public bool IsReadyToRecv { get; set; } = false;
 
         public Data()
         {
@@ -144,14 +145,8 @@ namespace checkers
             }
         }
 
-        public bool IsReadyToSend
-        {
-            get
-            {
-                return this.isReadyToSend;
-            }
-        }
-    
+
+
 
     }
 }
