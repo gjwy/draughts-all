@@ -173,7 +173,7 @@ namespace checkers_wf.Game
 
         }
 
-
+        // POSSIBLY DEFUNT
         private void threaded_start_nw_host()
         {
             
