@@ -329,8 +329,8 @@ namespace checkers_wf.Game
                     
                     nw.IsSentItem = false;
                     // clear the item from nw.recv too
-                    gFlag = "send";
-                    System.Console.WriteLine("gflag set to send");
+                    gFlag = "processRecv";
+                    System.Console.WriteLine("gflag set to processRecv");
 
                     //System.Console.WriteLine("i have received  {0}", rcv.AddInfo);
                     // apply the move
